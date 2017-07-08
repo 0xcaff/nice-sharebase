@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should get all library names 1`] = `
+Object {
+  "libraries": Array [
+    Object {
+      "name": "My Library",
+    },
+    Object {
+      "name": "Iron Man Suit",
+    },
+  ],
+}
+`;

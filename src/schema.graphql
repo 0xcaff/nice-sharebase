@@ -1,0 +1,38 @@
+type Library {
+	id: ID!
+	name: String!
+	isPrivate: Boolean!
+
+	folders: [Folder]!
+}
+
+type Folder {
+	id: ID!
+	name: String!
+
+	folders: [Folder]!
+	documents: [Document]!
+}
+
+type Document {
+	id: ID!
+	name: String!
+	modified: String!
+	contents: String!
+}
+
+type Query {
+	libraries: [Library]!
+	library(id: ID!): Library!
+
+	folder(id: ID!): Folder!
+
+	document(id: ID!): Document!
+}
+
+# TODO: Mutations
+# * Add Document
+# * Delete Document
+
+# TODO: Authentication
+

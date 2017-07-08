@@ -1,0 +1,9 @@
+{
+  "LibraryId": 1782,
+  "LibraryName": "Iron Man Suit",
+  "IsPrivate" : false,
+  "Links": {
+    "Self": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782",
+    "Folders": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782/folders"
+  }
+}

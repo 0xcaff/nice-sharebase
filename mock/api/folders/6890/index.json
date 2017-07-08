@@ -1,0 +1,14 @@
+{
+  "FolderId": 6890,
+  "FolderName": "Suit",
+  "Links": {
+    "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
+    "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
+    "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
+    "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share"
+  },
+  "Embedded": {
+    "Folders": [],
+    "Documents": []
+  }
+}

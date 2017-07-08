@@ -1,0 +1,20 @@
+[
+  {
+    "LibraryId": 406,
+    "LibraryName": "My Library",
+    "IsPrivate" : true,
+    "Links": {
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/libraries/406",
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/libraries/406/folders"
+    }
+  },
+  {
+    "LibraryId": 1782,
+    "LibraryName": "Iron Man Suit",
+    "IsPrivate" : false,
+    "Links": {
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782",
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782/folders"
+    }
+  }
+]

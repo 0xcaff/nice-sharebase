@@ -1,0 +1,16 @@
+[
+  {
+    "FolderId": 2034,
+    "FolderName": "Hot Rod Red",
+    "Links": {
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034",
+      "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/documents",
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/folders",
+      "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/share"
+    },
+    "Embedded": {
+      "Folders": [],
+      "Documents": []
+    }
+  }
+]
