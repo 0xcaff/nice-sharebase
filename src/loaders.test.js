@@ -17,7 +17,9 @@ it('should batch loads to folders and documents in a folder', async () => {
   await loader.dispatch();
   const data = await Promise.all(responses);
 
-  expect(data).toMatchSnapshot();
+  expect(data[0]).toEqual(data[1]);
+  expect(data[1]).toEqual(data[2]);
+  expect(data[0]["Embedded"]).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 
@@ -31,6 +33,10 @@ it('should cache loads for a folder between dispatches', async () => {
   await loader.dispatch();
 
   expect(await first).toMatchSnapshot();
-  expect(await first).toBe(await second);
+  expect(await first).toEqual(await second);
   expect(logs).toMatchSnapshot();
 });
+
+// TODO: test multiple case
+// TODO: test single failure case
+// TODO: test mass failure case

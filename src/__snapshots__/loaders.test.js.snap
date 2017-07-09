@@ -1,161 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should batch loads to folders and documents 1`] = `
-Array [
-  Object {
-    "Embedded": Object {
-      "Documents": Array [
-        Object {
-          "DateModified": "2016-02-08T19:25:51.667Z",
-          "DocumentId": 19749,
-          "DocumentName": "Armor.cad",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749",
-          },
-        },
-        Object {
-          "DateModified": "2016-02-08T19:26:01.167Z",
-          "DocumentId": 19779,
-          "DocumentName": "Pitch.docx",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779",
-          },
-        },
-      ],
-      "Folders": Array [
-        Object {
-          "Embedded": Object {
-            "Documents": Array [],
-            "Folders": Array [],
-          },
-          "FolderId": 2034,
-          "FolderName": "Hot Rod Red",
-          "Links": Object {
-            "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/documents",
-            "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/folders",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034",
-            "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/share",
-          },
-        },
-      ],
+exports[`should batch loads to folders and documents in a folder 1`] = `
+Object {
+  "Documents": Array [
+    Object {
+      "DateModified": "2016-02-08T19:25:51.667Z",
+      "DocumentId": 19749,
+      "DocumentName": "Armor.cad",
+      "Links": Object {
+        "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749/content",
+        "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749",
+      },
     },
-    "FolderId": 6890,
-    "FolderName": "Suit",
-    "Links": Object {
-      "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
-      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
-      "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
-      "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share",
+    Object {
+      "DateModified": "2016-02-08T19:26:01.167Z",
+      "DocumentId": 19779,
+      "DocumentName": "Pitch.docx",
+      "Links": Object {
+        "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779/content",
+        "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779",
+      },
     },
-  },
-  Object {
-    "Embedded": Object {
-      "Documents": Array [
-        Object {
-          "DateModified": "2016-02-08T19:25:51.667Z",
-          "DocumentId": 19749,
-          "DocumentName": "Armor.cad",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749",
-          },
-        },
-        Object {
-          "DateModified": "2016-02-08T19:26:01.167Z",
-          "DocumentId": 19779,
-          "DocumentName": "Pitch.docx",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779",
-          },
-        },
-      ],
-      "Folders": Array [
-        Object {
-          "Embedded": Object {
-            "Documents": Array [],
-            "Folders": Array [],
-          },
-          "FolderId": 2034,
-          "FolderName": "Hot Rod Red",
-          "Links": Object {
-            "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/documents",
-            "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/folders",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034",
-            "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/share",
-          },
-        },
-      ],
+  ],
+  "Folders": Array [
+    Object {
+      "Embedded": Object {
+        "Documents": Array [],
+        "Folders": Array [],
+      },
+      "FolderId": 2034,
+      "FolderName": "Hot Rod Red",
+      "Links": Object {
+        "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/documents",
+        "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/folders",
+        "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034",
+        "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/share",
+      },
     },
-    "FolderId": 6890,
-    "FolderName": "Suit",
-    "Links": Object {
-      "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
-      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
-      "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
-      "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share",
-    },
-  },
-  Object {
-    "Embedded": Object {
-      "Documents": Array [
-        Object {
-          "DateModified": "2016-02-08T19:25:51.667Z",
-          "DocumentId": 19749,
-          "DocumentName": "Armor.cad",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19749",
-          },
-        },
-        Object {
-          "DateModified": "2016-02-08T19:26:01.167Z",
-          "DocumentId": 19779,
-          "DocumentName": "Pitch.docx",
-          "Links": Object {
-            "Content": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779/content",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/documents/19779",
-          },
-        },
-      ],
-      "Folders": Array [
-        Object {
-          "Embedded": Object {
-            "Documents": Array [],
-            "Folders": Array [],
-          },
-          "FolderId": 2034,
-          "FolderName": "Hot Rod Red",
-          "Links": Object {
-            "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/documents",
-            "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/folders",
-            "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034",
-            "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/2034/share",
-          },
-        },
-      ],
-    },
-    "FolderId": 6890,
-    "FolderName": "Suit",
-    "Links": Object {
-      "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
-      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
-      "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
-      "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share",
-    },
-  },
-]
+  ],
+}
 `;
 
-exports[`should batch loads to folders and documents 2`] = `
+exports[`should batch loads to folders and documents in a folder 2`] = `
 Array [
   "/api/folders/6890?embed=f,d",
 ]
 `;
 
 exports[`should cache loads for a folder between dispatches 1`] = `
+Object {
+  "Embedded": Object {
+    "Documents": Array [],
+    "Folders": Array [],
+  },
+  "FolderId": 6890,
+  "FolderName": "Suit",
+  "Links": Object {
+    "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
+    "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
+    "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
+    "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share",
+  },
+}
+`;
+
+exports[`should cache loads for a folder between dispatches 2`] = `
 Array [
   "/api/folders/6890",
 ]
