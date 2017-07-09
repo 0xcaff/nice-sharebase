@@ -1,45 +1,25 @@
 // Creates an express server to serve the mock data.
 import path from 'path';
 import express from 'express';
-import { readFile, first } from './utils';
+import { handle } from './utils';
 
 const app = express();
 
 // handle all paths dynamically
 app.get('*', (req, res, next) => {
-  handle(req, res)
-    .then(_ => next());
+  h(req, res)
+    .then(_ => next())
+    .catch(err => console.error(err));
 });
 
-export default app;
+const h = async (req, res) => {
+  const { status, message, headers } = await handle(req.url);
 
-const handle = async (req, res) => {
-  const rPath = req.path.slice(1);
-
-  // try resolving the url. Examples:
-  //
-  // /api/libraries
-  // /api/libraries/{libraryid}
-  // /api/libraries/{libraryid}/folders
-  //
-  // /api/folders/{folderid}/documents
-  // /api/folders/{folderid}/folders
-
-  const paths = [`${rPath}.json`, `${rPath}/index.json`]
-    .map(raw => path.resolve(__dirname, raw));
-
-  const result = await first(paths, path => readFile(path));
-  if (result !== undefined) {
-    res
-      .set('Content-Type', 'application/json')
-      .send(result);
-  } else {
-    const message = `Path not found for ${rPath}. Tried:`;
-    const tried = paths.map(path => '\t' + path).join('\n');
-
-    res
-      .status(404)
-      .send(message + '\n' + tried);
-  }
+  res.status(status);
+  headers && Object.entries(headers)
+    .forEach(([key, value]) => res.set(key, value));
+  res.send(message);
 };
+
+export default app;
 

@@ -20,3 +20,24 @@ Object {
   ],
 }
 `;
+
+exports[`should get all library names 2`] = `
+Object {
+  "libraries": Array [
+    Object {
+      "folders": Array [
+        Object {
+          "name": "Suit",
+        },
+      ],
+    },
+    Object {
+      "folders": Array [
+        Object {
+          "name": "Mixtape",
+        },
+      ],
+    },
+  ],
+}
+`;
