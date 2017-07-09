@@ -4,7 +4,12 @@ export const getters = (kvs) =>
   Object.entries(kvs)
     .reduce(
       (acc, [key, value]) => {
-        acc[key] = get(value);
+        if (value instanceof Function) {
+          // just copy it
+          acc[key] = value;
+        } else {
+          acc[key] = get(value);
+        }
         return acc;
       },
       {},
@@ -30,9 +35,42 @@ export const resolvers = {
   },
 
   Library: getters({
-    name: "LibraryName",
     id: "LibraryId",
+    name: "LibraryName",
     isPrivate: "IsPrivate",
+
+    async folders(obj, args, context) {
+      // TODO: query planning for nested children
+
+      const { loaders } = context;
+      const { libraryFolders } = loaders;
+
+      const folders = await libraryFolders.load(obj['LibraryId']);
+      return folders;
+    },
+  }),
+
+  Folder: getters({
+    id: "FolderId",
+    name: "FolderName",
+
+    async folders(obj, args, context) {
+      // TODO: Implement
+    },
+
+    async documents(obj, args, context) {
+      // TODO: Implement
+    },
+  }),
+
+  Document: getters({
+    id: "DocumentId",
+    name: "DocumentName",
+    modified: "DateModified",
+
+    // async contents(obj, args, context) {
+    //   // TODO: Implement
+    // },
   }),
 };
 

@@ -1,0 +1,16 @@
+[
+  {
+    "FolderId": 39423,
+    "FolderName": "Mixtape",
+    "Links": {
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/39423",
+      "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/39423/documents",
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/39423/folders",
+      "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/39423/share"
+    },
+    "Embedded": {
+      "Folders": [],
+      "Documents": []
+    }
+  }
+]

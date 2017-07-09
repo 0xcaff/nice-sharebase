@@ -21,10 +21,12 @@ it('should create getters', () => {
   const acc = getters({
     id: 'agent',
     op: 'operation',
+    realFunc: (obj) => 420,
   });
 
   expect(acc.id(data)).toBe(data['agent']);
   expect(acc.op(data)).toBe(data['operation']);
+  expect(acc.realFunc(data)).toBe(420);
 });
 
 it('should get all library names', async () => {
@@ -42,3 +44,9 @@ it('should fail explicitly when fetching a non-existing resource', async () => {
   expect(resp.errors).toMatchSnapshot();
 });
 
+it('should get all library names', async () => {
+  const context = getContext();
+  const resp = await graphql(schema, "{ libraries { folders { name } } }", undefined, context);
+
+  expect(resp.data).toMatchSnapshot();
+});

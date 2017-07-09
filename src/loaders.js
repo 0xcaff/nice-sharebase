@@ -6,10 +6,11 @@ import { throwOnFail } from './errors';
 // Called usually once per request to create the caches responsible for holding
 // on to data.
 export const create = ({ base, transform = nop}) => ({
-  library: LibraryLoaderFor({ base, transform }),
+  library: Library({ base, transform }),
+  libraryFolders: LibraryFolders({ base, transform }),
 });
 
-const LibraryLoaderFor = ({ base, transform }) => new Loader({
+const Library = ({ base, transform }) => new Loader({
   fetchFn: async (id, extras) => {
     const endpoint = id === 'all' ? 'libraries' : `libraries/${id}`;
     const path = url.resolve(base, endpoint);
@@ -28,6 +29,16 @@ const LibraryLoaderFor = ({ base, transform }) => new Loader({
       // add each lib to cache
       ret.forEach(lib => this.cache.set(+lib['LibraryId'], lib));
     };
+  },
+});
+
+const LibraryFolders = ({ base, transform }) => new Loader({
+  fetchFn: async (id, extras) => {
+    const path = url.resolve(base, `libraries/${id}/folders`);
+    const req = transform(new Request(path));
+    const resp = await throwOnFail(await fetch(req));
+    const body = await resp.json();
+    return body;
   },
 });
 
