@@ -1,2 +1,2 @@
 require('babel-register');
-require('src/schema.js');
+module.exports = require('./src/schema.js');

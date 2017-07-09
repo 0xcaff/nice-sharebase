@@ -2,11 +2,10 @@
 import path from 'path';
 import express from 'express';
 import { handle } from './utils';
-
 const app = express();
 
 // handle all paths dynamically
-app.get('*', (req, res, next) => {
+app.get('/api/*', (req, res, next) => {
   h(req, res)
     .then(_ => next())
     .catch(err => console.error(err));
@@ -21,5 +20,5 @@ const h = async (req, res) => {
   res.send(message);
 };
 
-export default app;
+app.listen(30101, '0.0.0.0', function() { console.log('started mock server on port 30101') });
 

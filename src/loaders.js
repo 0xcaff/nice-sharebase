@@ -12,10 +12,6 @@ export const create = ({ base, transform = nop}) => ({
   folder: Folder({ base, transform }),
 });
 
-export const execute = async (loaders) => {
-  await loaders.folder.dispatch();
-};
-
 const Library = ({ base, transform }) => new Loader({
   fetchFn: async (id, extras) => {
     // TODO: 'all' is probably not a good key

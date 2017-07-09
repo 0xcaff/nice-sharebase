@@ -2,7 +2,7 @@ import url from 'url';
 import { graphql } from 'graphql';
 
 import { schema } from './schema';
-import { create, execute } from './loaders';
+import { create } from './loaders';
 import { logs, ENDPOINT } from '../mock/setup';
 
 import { getters } from './resolvers';

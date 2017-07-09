@@ -17,7 +17,8 @@
   "scripts": {
     "test": "jest",
     "test-dev": "jest --watch",
-    "mock": "node mock/run.js"
+    "mock-server": "babel-node mock/server.js",
+    "demo": "babel-node mock/gql-server.js"
   },
   "babel": {
     "presets": [
@@ -28,8 +29,10 @@
     ]
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
     "express": "^4.15.3",
+    "express-graphql": "^0.6.6",
     "jest": "^20.0.4",
     "nock": "^9.0.13"
   }

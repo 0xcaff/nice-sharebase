@@ -7,7 +7,7 @@ export const ENDPOINT = 'http://mock.com/';
 
 export const logs = [];
 
-beforeEach(() => logs.length = 0);
+global.beforeEach && beforeEach(() => logs.length = 0);
 
 const setup = app => app
 	.get(_ => true)
