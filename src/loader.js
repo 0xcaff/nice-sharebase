@@ -1,12 +1,13 @@
-// A minimal data loader which batches requests for until dispatch is called
-// instead of waiting for a runtime specific event.
+// A minimal data loader which batches and caches requests
 export class BatchLoader {
-  constructor() {
+  constructor({ autoDispatch = true }) {
     // A queue of data requests which need to be fulfilled.
     this.promiseQueue = [];
 
     // A map of ids to extras and in-promise results.
     this.cache = new Map();
+
+    this.autoDispatch = autoDispatch;
   }
 
   // Checks whether something is in the cache. Override this to check whether
@@ -36,8 +37,17 @@ export class BatchLoader {
     // enqueue get from remote
     const promise = new Promise((resolve, reject) => {
       this.promiseQueue.push({ id, extras, resolve, reject });
+
+      if (this.promiseQueue.length === 1 && this.autoDispatch) {
+        // first element in the queue, schedule dispatch to run after the stack
+        // is completely unwound and when the promise microtask queue is
+        // executing. The procces.nextTick causes dispatch to run after the
+        // promise microtask queue is exhausted. The promise microtask queue can
+        // be added to by things on the promise microtask queue.
+
+        Promise.resolve().then(_ => process.nextTick(_ => this.dispatch()));
+      }
     });
-    console.log(this.promiseQueue);
 
     // cache request
     this.putCache(id, extras, promise);
@@ -53,7 +63,6 @@ export class BatchLoader {
 
   // Call when you want promises from load to be resolved.
   async dispatch() {
-    console.log(this.promiseQueue);
     // pull and reset queue
     const queue = this.promiseQueue;
     this.promiseQueue = [];

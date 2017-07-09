@@ -45,8 +45,10 @@ export const resolvers = {
       return f['Embedded']['Folders'];
     },
 
-    // documents: (obj, args, { loaders: { folder } }) =>
-    //   folder.load(obj['FolderId'], { documents: true }),
+    documents: async (obj, args, { loaders: { folder } }) => {
+      const f = await folder.load(obj['FolderId'], { documents: true });
+      return f['Embedded']['Documents'];
+    },
   }),
 
   Document: getters({

@@ -6,7 +6,7 @@ import { logs, ENDPOINT } from '../mock/setup';
 const base = url.resolve(ENDPOINT, 'api/');
 
 it('should batch loads to folders and documents in a folder', async () => {
-  const loader = new FolderLoader({ base, transform: (r) => r });
+  const loader = new FolderLoader({ base, transform: (r) => r, autoDispatch: false });
 
   const responses = [
     loader.load(6890),
@@ -24,7 +24,7 @@ it('should batch loads to folders and documents in a folder', async () => {
 });
 
 it('should cache loads for a folder between dispatches', async () => {
-  const loader = new FolderLoader({ base, transform: (r) => r });
+  const loader = new FolderLoader({ base, transform: (r) => r, autoDispatch: false });
 
   const first = loader.load(6890);
   await loader.dispatch();
@@ -34,6 +34,14 @@ it('should cache loads for a folder between dispatches', async () => {
 
   expect(await first).toMatchSnapshot();
   expect(await first).toEqual(await second);
+  expect(logs).toMatchSnapshot();
+});
+
+it('should automatically execute loader.dispatch', async () => {
+  const loader  = new FolderLoader({ base, transform: (r) => r });
+
+  const first = await loader.load(6890);
+  expect(first).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 

@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should automatically execute loader.dispatch 1`] = `
+Object {
+  "Embedded": Object {
+    "Documents": Array [],
+    "Folders": Array [],
+  },
+  "FolderId": 6890,
+  "FolderName": "Suit",
+  "Links": Object {
+    "Documents": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/documents",
+    "Folders": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/folders",
+    "Self": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890",
+    "Shares": "https://app.sharebase.com/ShareBaseAPI/api/folders/6890/share",
+  },
+}
+`;
+
+exports[`should automatically execute loader.dispatch 2`] = `
+Array [
+  "/api/folders/6890",
+]
+`;
+
 exports[`should batch loads to folders and documents in a folder 1`] = `
 Object {
   "Documents": Array [

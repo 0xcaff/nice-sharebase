@@ -52,8 +52,8 @@ const LibraryFolders = ({ base, transform }) => new Loader({
 const Folder = ({ base, transform }) => new FolderLoader({ base, transform });
 
 export class FolderLoader extends BatchLoader {
-  constructor({ base, transform }) {
-    super();
+  constructor({ base, transform, autoDispatch }) {
+    super({ autoDispatch });
     this.base = base;
     this.transform = transform;
   }

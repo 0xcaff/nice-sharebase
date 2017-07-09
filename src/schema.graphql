@@ -27,7 +27,6 @@ type Query {
 	libraries: [Library]!
 	library(id: ID!): Library!
 
-	# TODO: Implement
 	folder(id: ID!): Folder!
 
 	# TODO: Implement

@@ -32,3 +32,36 @@ Array [
   "/api/libraries",
 ]
 `;
+
+exports[`should only make the required requests on complex queries 1`] = `
+Object {
+  "library": Object {
+    "folders": Array [
+      Object {
+        "documents": Array [
+          Object {
+            "name": "Armor.cad",
+          },
+          Object {
+            "name": "Pitch.docx",
+          },
+        ],
+        "folders": Array [
+          Object {
+            "name": "Hot Rod Red",
+          },
+        ],
+        "name": "Suit",
+      },
+    ],
+  },
+}
+`;
+
+exports[`should only make the required requests on complex queries 2`] = `
+Array [
+  "/api/libraries/406",
+  "/api/libraries/406/folders",
+  "/api/folders/6890?embed=f,d",
+]
+`;
