@@ -44,9 +44,3 @@ it('should fail explicitly when fetching a non-existing resource', async () => {
   expect(resp.errors).toMatchSnapshot();
 });
 
-it('should get all library names', async () => {
-  const context = getContext();
-  const resp = await graphql(schema, "{ libraries { folders { name } } }", undefined, context);
-
-  expect(resp.data).toMatchSnapshot();
-});
