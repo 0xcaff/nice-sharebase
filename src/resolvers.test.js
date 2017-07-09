@@ -6,6 +6,11 @@ import { create } from './loaders';
 import { ENDPOINT } from '../mock/setup';
 
 import { getters } from './resolvers';
+import { FetchError } from './errors';
+
+const getContext = _ => ({
+  loaders: create({ base: url.resolve(ENDPOINT, 'api/') }),
+});
 
 it('should create getters', () => {
   const data = {
@@ -23,12 +28,17 @@ it('should create getters', () => {
 });
 
 it('should get all library names', async () => {
-  const loaders = create({ base: url.resolve(ENDPOINT, 'api/') });
-  const context = { loaders };
-
+  const context = getContext();
   const resp = await graphql(schema, "{ libraries { name } }", undefined, context);
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
+});
+
+it('should fail explicitly when fetching a non-existing resource', async () => {
+  const context = getContext();
+  const resp = await graphql(schema, "{ library(id: 42069) { name } }", undefined, context);
+
+  expect(resp.errors).toMatchSnapshot();
 });
 

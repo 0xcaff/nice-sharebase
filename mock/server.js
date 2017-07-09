@@ -34,9 +34,12 @@ const handle = async (req, res) => {
       .set('Content-Type', 'application/json')
       .send(result);
   } else {
+    const message = `Path not found for ${rPath}. Tried:`;
+    const tried = paths.map(path => '\t' + path).join('\n');
+
     res
       .status(404)
-      .send(`Path not found for ${rPath}. Tried: ${paths.join(', ')}`);
+      .send(message + '\n' + tried);
   }
 };
 

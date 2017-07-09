@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should fail explicitly when fetching a non-existing resource 1`] = `
+Array [
+  [GraphQLError: Request Failed. Status: 404 - Not Found. Body: Path not found for api/libraries/42069. Tried:
+	/home/drone/projects/nice-sharebase/mock/api/libraries/42069.json
+	/home/drone/projects/nice-sharebase/mock/api/libraries/42069/index.json],
+]
+`;
+
 exports[`should get all library names 1`] = `
 Object {
   "libraries": Array [
