@@ -18,6 +18,8 @@ type Document {
 	id: ID!
 	name: String!
 	modified: String!
+
+	# TODO: Implement
 	contents: String!
 }
 
@@ -25,8 +27,10 @@ type Query {
 	libraries: [Library]!
 	library(id: ID!): Library!
 
+	# TODO: Implement
 	folder(id: ID!): Folder!
 
+	# TODO: Implement
 	document(id: ID!): Document!
 }
 

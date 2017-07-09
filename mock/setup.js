@@ -5,10 +5,14 @@ import { handle } from './utils';
 
 export const ENDPOINT = 'http://mock.com/';
 
+export const logs = [];
+
+beforeEach(() => logs.length = 0);
+
 const setup = app => app
 	.get(_ => true)
 	.reply(function(url, body, cb) {
-		h(url, body)
+		h(url)
 			.then((...args) => {
 				// setup for next request
 				setup(app);
@@ -21,7 +25,10 @@ const app = nock(ENDPOINT);
 setup(app);
 
 async function h(path) {
+  log(path);
   const { status, message, headers } = await handle(path);
   return [status, message, headers];
 };
+
+const log = (path) => logs.push(path);
 

@@ -17,21 +17,14 @@ export const getters = (kvs) =>
 
 export const resolvers = {
   Query: {
-    async libraries(obj, args, context) {
-      const { loaders } = context;
-      const { library } = loaders;
+    libraries: (obj, args, { loaders: { library } }) =>
+      library.load('all'),
 
-      const libs = await library.load('all');
-      return libs;
-    },
+    library: (obj, args, { loaders: { library } }) =>
+      library.load(args['id']),
 
-    async library(obj, args, context) {
-      const { loaders } = context;
-      const { library } = loaders;
-
-      const lib = await library.load(args['id']);
-      return lib;
-    },
+    folder: (obj, args, { loaders: { folder } }) =>
+      folder.load(args['id']),
   },
 
   Library: getters({
@@ -39,28 +32,21 @@ export const resolvers = {
     name: "LibraryName",
     isPrivate: "IsPrivate",
 
-    async folders(obj, args, context) {
-      // TODO: query planning for nested children
-
-      const { loaders } = context;
-      const { libraryFolders } = loaders;
-
-      const folders = await libraryFolders.load(obj['LibraryId']);
-      return folders;
-    },
+    folders: (obj, args, { loaders: { libraryFolders } }) =>
+      libraryFolders.load(obj['LibraryId']),
   }),
 
   Folder: getters({
     id: "FolderId",
     name: "FolderName",
 
-    async folders(obj, args, context) {
-      // TODO: Implement
+    folders: async (obj, args, { loaders: { folder } }) => {
+      const f = await folder.load(obj['FolderId'], { folders: true });
+      return f['Embedded']['Folders'];
     },
 
-    async documents(obj, args, context) {
-      // TODO: Implement
-    },
+    // documents: (obj, args, { loaders: { folder } }) =>
+    //   folder.load(obj['FolderId'], { documents: true }),
   }),
 
   Document: getters({
@@ -68,7 +54,7 @@ export const resolvers = {
     name: "DocumentName",
     modified: "DateModified",
 
-    // async contents(obj, args, context) {
+    // contents(obj, args, context) {
     //   // TODO: Implement
     // },
   }),

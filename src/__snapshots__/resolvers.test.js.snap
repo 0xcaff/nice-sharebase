@@ -8,6 +8,12 @@ Array [
 ]
 `;
 
+exports[`should fail explicitly when fetching a non-existing resource 2`] = `
+Array [
+  "/api/libraries/42069",
+]
+`;
+
 exports[`should get all library names 1`] = `
 Object {
   "libraries": Array [
@@ -19,4 +25,10 @@ Object {
     },
   ],
 }
+`;
+
+exports[`should get all library names 2`] = `
+Array [
+  "/api/libraries",
+]
 `;

@@ -1,6 +1,7 @@
 import url from 'url';
 import 'isomorphic-fetch';
 
+import { BatchLoader, Loader } from './loader';
 import { throwOnFail } from './errors';
 
 // Called usually once per request to create the caches responsible for holding
@@ -8,10 +9,16 @@ import { throwOnFail } from './errors';
 export const create = ({ base, transform = nop}) => ({
   library: Library({ base, transform }),
   libraryFolders: LibraryFolders({ base, transform }),
+  folder: Folder({ base, transform }),
 });
+
+export const execute = async (loaders) => {
+  await loaders.folder.dispatch();
+};
 
 const Library = ({ base, transform }) => new Loader({
   fetchFn: async (id, extras) => {
+    // TODO: 'all' is probably not a good key
     const endpoint = id === 'all' ? 'libraries' : `libraries/${id}`;
     const path = url.resolve(base, endpoint);
 
@@ -42,36 +49,81 @@ const LibraryFolders = ({ base, transform }) => new Loader({
   },
 });
 
-// A minimal data loader which doesn't batch requests since we can gain
-// flexibility without it and and we don't need it because the ShareBase API
-// doesn't do batching.
-class Loader {
-  constructor({ fetchFn, tryCacheFn = this.tryCache, putCacheFn = this.putCache, cache }) {
-    this.cache = cache || new Map();
+const Folder = ({ base, transform }) => new FolderLoader({ base, transform });
 
-    this.tryCache = tryCacheFn.bind(this);
-    this.putCache = putCacheFn.bind(this);
-    this.fetch = fetchFn.bind(this);
+export class FolderLoader extends BatchLoader {
+  constructor({ base, transform }) {
+    super();
+    this.base = base;
+    this.transform = transform;
   }
 
-  tryCache(id, extras) {
-    return this.cache.get(id);
-  }
-
-  putCache(id, extras, thing) {
-    this.cache.set(id, thing);
-  }
-
-  async load(id, extras) {
-    const cached = this.tryCache(id, extras);
-    if (cached) {
-      return cached;
+  getFromCache(id, { folders: needFolders, documents: needDocs }) {
+    const cached = this.cache.get(id);
+    if (!cached) {
+      return null;
     }
 
-    const ret = await this.fetch(id, extras);
-    this.putCache(id, extras, ret);
-    return ret;
+    const { extras, promise } = cached;
+    const { folders: hasFolders, documents: hasDocs } = extras;
+
+    // ensure that the extras for the cached request are better than or equal to
+    // the one requested
+    if (needFolders && !hasFolders) {
+      return null;
+    }
+
+    if (needDocs && !hasDocs) {
+      return null;
+    }
+
+    return promise;
+  }
+
+  async batchLoad(queue) {
+    const { base, transform } = this;
+
+    // reduce into minimum required requests
+    const reqs = queue.reduce(
+      (acc, { id, extras: rExtras, resolve, reject }) => {
+        const { promiseFuncs = [], extras = {} } = (acc[id] || {});
+
+        // update
+        promiseFuncs.push({ resolve, reject });
+        Object.assign(extras, filter(rExtras));
+
+        acc[id] = { promiseFuncs, extras };
+        return acc;
+      }, {});
+
+    return await Promise.all(
+      Object.entries(reqs)
+        .map(async ([id, { promiseFuncs, extras: { folders, documents }} ]) => {
+          try {
+            const paramsString =
+              Object.keys(filter({ 'f': folders, 'd': documents }))
+                .join();
+
+            const path = url.resolve(base, `folders/${id}` + (paramsString && `?embed=${paramsString}`));
+            const req = transform(new Request(path));
+            const resp = await throwOnFail(await fetch(req));
+            const body = await resp.json();
+
+            promiseFuncs.forEach(({ resolve, reject }) => resolve(body));
+          } catch(e) {
+            promiseFuncs.forEach(({ resolve, reject }) => reject(e));
+          }
+        })
+    );
   }
 }
 
 const nop = (arg) => arg;
+
+const filter = (obj) =>
+  Object.entries(obj)
+    .reduce(
+      (acc, [k, v]) => { if (v) { acc[k] = v }; return acc; },
+      {},
+    );
+
