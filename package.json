@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A nice GraphQL wrapper around the ShareBase public API.",
   "author": "Martin Charles",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "main": "index.js",
   "dependencies": {
     "babel-plugin-inline-import": "^2.0.5",
