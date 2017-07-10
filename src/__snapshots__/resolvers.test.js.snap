@@ -65,3 +65,17 @@ Array [
   "/api/folders/6890?embed=f,d",
 ]
 `;
+
+exports[`should resolve documents 1`] = `
+Object {
+  "document": Object {
+    "name": "Armor.cad",
+  },
+}
+`;
+
+exports[`should resolve documents 2`] = `
+Array [
+  "/api/documents/19749",
+]
+`;

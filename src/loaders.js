@@ -10,6 +10,7 @@ export const create = ({ base, transform = nop}) => ({
   library: Library({ base, transform }),
   libraryFolders: LibraryFolders({ base, transform }),
   folder: Folder({ base, transform }),
+  document: Document({ base, transform }),
 });
 
 const Library = ({ base, transform }) => new Loader({
@@ -113,6 +114,16 @@ export class FolderLoader extends BatchLoader {
     );
   }
 }
+
+const Document = ({ base, transform }) => new Loader({
+  fetchFn: async (id, extras) => {
+    const path = url.resolve(base, `documents/${id}`);
+    const req = transform(new Request(path));
+    const resp = await throwOnFail(await fetch(req));
+    const body = await resp.json();
+    return body;
+  },
+});
 
 const nop = (arg) => arg;
 

@@ -19,8 +19,7 @@ type Document {
 	name: String!
 	modified: String!
 
-	# TODO: Implement
-	contents: String!
+	# TODO: accessing the contents
 }
 
 type Query {
@@ -29,13 +28,35 @@ type Query {
 
 	folder(id: ID!): Folder!
 
-	# TODO: Implement
 	document(id: ID!): Document!
 }
 
-# TODO: Mutations
-# * Add Document
-# * Delete Document
+type Authed {
+	# As long as you specify this token in your requests using the the
+	# Authorization header, you will be able to access resources on this server.
+	token: ID!
+	username: String!
+	userId: ID!
+	expiration: String!
+}
 
-# TODO: Authentication
+type Mutation {
+	# Registers your credentials with the server and creates a new session. This
+	# allows you to make authenticated requests with the sharebase API until the
+	# session is revoked.
+	authenticate(username: String!, password: String!): Authed!
+
+	# Revokes a session given sufficient authority.
+	revokeSession(username: String!, password: String!, session: ID!): Boolean!
+
+	# Creates a new phoenix token for direct communication with the real
+	# sharebase API. Be careful with this token, it cannot be revoked. It
+	# expires in 10 hours.
+	phoenixToken: ID!
+
+	deleteFolder(id: ID!): Boolean!
+
+	deleteDocument(id: ID!): Boolean!
+	newDocument(id: ID!): Document!
+}
 

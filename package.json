@@ -28,6 +28,9 @@
       "babel-plugin-inline-import"
     ]
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",

@@ -25,6 +25,9 @@ export const resolvers = {
 
     folder: (obj, args, { loaders: { folder } }) =>
       folder.load(args['id']),
+
+    document: (obj, args, { loaders: { document } }) =>
+      document.load(args['id']),
   },
 
   Library: getters({

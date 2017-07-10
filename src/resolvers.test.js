@@ -54,3 +54,12 @@ it('should only make the required requests on complex queries', async () => {
   expect(resp.data).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
+
+it('should resolve documents', async () => {
+  const context = getContext();
+  const resp = await graphql(schema, `{ document(id: 19749) { name } }`, undefined, context);
+
+  expect(resp.errors).toBeFalsy();
+  expect(resp.data).toMatchSnapshot();
+  expect(logs).toMatchSnapshot();
+});
