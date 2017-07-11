@@ -18,7 +18,7 @@ export const getters = (kvs) =>
 export const resolvers = {
   Query: {
     libraries: (obj, args, { loaders: { library } }) =>
-      library.load('all'),
+      library.load(undefined, 'all'),
 
     library: (obj, args, { loaders: { library } }) =>
       library.load(args['id']),

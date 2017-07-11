@@ -63,3 +63,21 @@ it('should resolve documents', async () => {
   expect(resp.data).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
+
+it('should hit the cache when getting the same library resources multiple times', async () => {
+  const context = getContext();
+  const resp = await graphql(schema, `{ library(id: 406) { name folders { name } } libraries { id name folders { name } } }`, undefined, context);
+
+  expect(resp.errors).toBeFalsy();
+  expect(resp.data).toMatchSnapshot();
+  expect(logs).toMatchSnapshot();
+});
+
+it(`should fail explicitly when a single library resources doesn't exist while fetching many`, async () => {
+  const context = getContext();
+  const resp = await graphql(schema, `{ library(id: 406) { name } libOne: library(id: 420) { name } }`, undefined, context);
+
+  expect(resp.errors).toMatchSnapshot();
+  expect(resp.data).toBeFalsy();
+  expect(logs).toMatchSnapshot();
+});

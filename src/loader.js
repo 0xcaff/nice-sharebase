@@ -81,9 +81,8 @@ export class BatchLoader {
   }
 }
 
-// A minimal data loader which doesn't batch requests since we can gain
-// flexibility without it and and we don't need it because the ShareBase API
-// doesn't do batching.
+// A minimal caching data loader which doesn't batch requests. It also supplies
+// and extra parameter at cache try/put time.
 export class Loader {
   constructor({ fetchFn, tryCacheFn = this.tryCache, putCacheFn = this.putCache, cache }) {
     this.cache = cache || new Map();
@@ -97,19 +96,19 @@ export class Loader {
     return this.cache.get(id);
   }
 
-  putCache(id, extras, thing) {
-    this.cache.set(id, thing);
+  putCache(id, extras, promise) {
+    this.cache.set(id, promise);
   }
 
-  async load(id, extras) {
+  load(id, extras) {
     const cached = this.tryCache(id, extras);
     if (cached) {
       return cached;
     }
 
-    const ret = await this.fetch(id, extras);
-    this.putCache(id, extras, ret);
-    return ret;
+    const promise = this.fetch(id, extras);
+    this.putCache(id, extras, promise);
+    return promise;
   }
 }
 

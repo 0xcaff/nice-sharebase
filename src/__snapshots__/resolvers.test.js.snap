@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should fail explicitly when a single library resources doesn't exist while fetching many 1`] = `
+Array [
+  [GraphQLError: The library with id 420 can't be found.],
+]
+`;
+
+exports[`should fail explicitly when a single library resources doesn't exist while fetching many 2`] = `
+Array [
+  "/api/libraries",
+]
+`;
+
 exports[`should fail explicitly when fetching a non-existing resource 1`] = `
 Array [
   [GraphQLError: Request Failed. Status: 404 - Not Found. Body: Path not found for api/libraries/42069. Tried:
@@ -30,6 +42,47 @@ Object {
 exports[`should get all library names 2`] = `
 Array [
   "/api/libraries",
+]
+`;
+
+exports[`should hit the cache when getting the same library resources multiple times 1`] = `
+Object {
+  "libraries": Array [
+    Object {
+      "folders": Array [
+        Object {
+          "name": "Suit",
+        },
+      ],
+      "id": "406",
+      "name": "My Library",
+    },
+    Object {
+      "folders": Array [
+        Object {
+          "name": "Mixtape",
+        },
+      ],
+      "id": "1782",
+      "name": "Iron Man Suit",
+    },
+  ],
+  "library": Object {
+    "folders": Array [
+      Object {
+        "name": "Suit",
+      },
+    ],
+    "name": "My Library",
+  },
+}
+`;
+
+exports[`should hit the cache when getting the same library resources multiple times 2`] = `
+Array [
+  "/api/libraries",
+  "/api/libraries/406/folders",
+  "/api/libraries/1782/folders",
 ]
 `;
 

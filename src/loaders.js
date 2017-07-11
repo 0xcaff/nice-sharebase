@@ -13,28 +13,60 @@ export const create = ({ base, transform = nop}) => ({
   document: Document({ base, transform }),
 });
 
-const Library = ({ base, transform }) => new Loader({
-  fetchFn: async (id, extras) => {
-    // TODO: 'all' is probably not a good key
-    const endpoint = id === 'all' ? 'libraries' : `libraries/${id}`;
-    const path = url.resolve(base, endpoint);
+const Library = ({ base, transform }) => new LibraryLoader({ base, transform });
 
-    const req = transform(new Request(path));
-    const resp = await throwOnFail(await fetch(req));
-    const body = await resp.json();
+class LibraryLoader extends BatchLoader {
+  constructor({ base, transform, autoDispatch }) {
+    super({ autoDispatch });
+    this.base = base;
+    this.transform = transform;
+  }
 
-    return body;
-  },
-  putCacheFn(id, extras, ret) {
-    // put all values in cache
-    this.cache.set(id, ret);
+  async batchLoad(queue) {
+    const { base, transform } = this;
 
-    if (id === 'all') {
-      // add each lib to cache
-      ret.forEach(lib => this.cache.set(+lib['LibraryId'], lib));
-    };
-  },
-});
+    // find minimum required work, we will only have one qualifying promise
+    // because of the cache
+    const gettingAll = queue.length > 1 ||
+      queue.some(({ id, extras, resolve, reject }) => extras === 'all');
+
+    if (gettingAll) {
+      // if we fail here, the entire batch will fail transiently
+      const path = url.resolve(base, 'libraries');
+      const req = transform(new Request(path));
+      const resp = await throwOnFail(await fetch(req));
+      const all = await resp.json();
+
+      queue.forEach(({ id, extras, resolve, reject }) => {
+        if (extras === 'all') {
+          resolve(all);
+        }
+
+        const lib = all.find(lib => lib['LibraryId'] == id);
+        if (!lib) {
+          reject(new TypeError(`The library with id ${id} can't be found.`));
+        }
+
+        resolve(lib);
+      });
+    } else {
+      // resolve queue one by one
+      return await Promise.all(
+        queue.map(async ({ id, resolve, reject }) => {
+          try {
+            const path = url.resolve(base, `libraries/${id}`);
+            const req = transform(new Request(path));
+            const resp = await throwOnFail(await fetch(req));
+            const body = await resp.json();
+            resolve(body);
+          } catch(e) {
+            reject(e);
+          }
+        })
+      );
+    }
+  }
+}
 
 const LibraryFolders = ({ base, transform }) => new Loader({
   fetchFn: async (id, extras) => {
