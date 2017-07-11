@@ -2,6 +2,8 @@ import fs from 'fs';
 import url, { URLSearchParams } from 'url';
 import path from 'path';
 
+const root = path.resolve(__dirname, '../');
+
 // Returns the result of the first value in elems send through predicate which didn't throw an error.
 export async function first(elems, predicate) {
 	for (let elem of elems) {
@@ -86,7 +88,7 @@ export async function handle(p) {
   } else {
     const status = 404;
 		const pre = `Path not found for ${p}. Tried:`;
-		const tried = paths.map(path => '\t' + path).join('\n');
+		const tried = paths.map(p => '\t' + path.relative(root, p)).join('\n');
     const message = pre + '\n' + tried;
 
     return { status, message };

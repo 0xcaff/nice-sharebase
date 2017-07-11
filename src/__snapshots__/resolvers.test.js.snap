@@ -3,8 +3,8 @@
 exports[`should fail explicitly when fetching a non-existing resource 1`] = `
 Array [
   [GraphQLError: Request Failed. Status: 404 - Not Found. Body: Path not found for api/libraries/42069. Tried:
-	/home/drone/projects/nice-sharebase/mock/api/libraries/42069.json
-	/home/drone/projects/nice-sharebase/mock/api/libraries/42069/index.json],
+	mock/api/libraries/42069.json
+	mock/api/libraries/42069/index.json],
 ]
 `;
 

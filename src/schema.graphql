@@ -14,49 +14,93 @@ type Folder {
 	documents: [Document]!
 }
 
+# If you want to access the contents of a document or create a new document,
+# you will need to talk to the orignial ShareBase server. Checkout description
+# of the Query type fore more.
+
+# TODO: Potentially allow for the upload of small files.
 type Document {
 	id: ID!
 	name: String!
 	modified: String!
-
-	# TODO: accessing the contents
 }
 
+# There are two parts to the ShareBase public API: the data storage and retrival
+# part and the metadata management part. This API exposes the metadata part
+# through a GraphQL interface. If you want to access the data storage part, talk
+# directly to the official ShareBase API. The documentation for the official
+# ShareBase API can be found at https://developers.sharebase.com/
+#
+# Authorization is handled by passing a token to the HTTP Authorization header
+# of a request. You can get a token by calling the authenticate mutation. If you
+# want to use the original ShareBase API for authentication, you can pass tokens
+# using the PHOENIX-TOKEN scheme to this header also.
 type Query {
 	libraries: [Library]!
 	library(id: ID!): Library!
-
 	folder(id: ID!): Folder!
-
 	document(id: ID!): Document!
 }
 
 type Authed {
-	# As long as you specify this token in your requests using the the
-	# Authorization header, you will be able to access resources on this server.
+	# As long as you specify this string in your requests' Authorization header,
+	# you will be able to access protected resources on the server.
 	token: ID!
 	username: String!
 	userId: ID!
-	expiration: String!
+}
+
+type Share {
+	id: ID!
+	reference: String!
+
+	# A url which can be used to access the shared resource.
+	url: String!
+}
+
+input ShareInput {
+	# TODO: The format of the date isn't specified.
+	# TODO: Single use?
+
+	# Some kind of date in the future when this share will expire.
+	expiresOn: String
+
+	# A password which will be required when acessing the share. This password
+	# MUST adhere to the sharebase password policy.
+	password: String
+
+	allowView: Boolean
+	allowDownload: Boolean
+	allowEdit: Boolean
 }
 
 type Mutation {
-	# Registers your credentials with the server and creates a new session. This
-	# allows you to make authenticated requests with the sharebase API until the
-	# session is revoked.
+	# Registers your credentials with the server and creates a new session. If
+	# the provided credentials are invalid, an error is returned. The
+	# credentials will be held on the server until all the user's sessions are
+	# revoked. The token in the response allows you to make authenticated
+	# requests with this API until the session is revoked.
 	authenticate(username: String!, password: String!): Authed!
 
-	# Revokes a session given sufficient authority.
+	# Revokes a session. If the credentials are incorrect, an error is returned.
 	revokeSession(username: String!, password: String!, session: ID!): Boolean!
 
-	# Creates a new phoenix token for direct communication with the real
-	# sharebase API. Be careful with this token, it cannot be revoked. It
+	# Revokes all sessions held by the user. If the credentials are incorrect,
+	# an error is returned.
+	revokeAll(username: String!, password: String!): Boolean!
+
+	# Creates a new phoenix token for direct communication with the orignal
+	# ShareBase API. Be careful with this token because it cannot be revoked. It
 	# expires in 10 hours.
 	phoenixToken: ID!
 
+	# Creates a new folder in the library at the specified path. Required parent
+	# folders are created if they don't exist. The path delimiters aren't
+	# specified. Try whatever you want.
+	newFolder(libraryId: ID!, path: String!): Folder!
+	shareFolder(id: ID!, input: ShareInput!): Share!
 	deleteFolder(id: ID!): Boolean!
 
+	shareDocument(id: ID!, input: ShareInput!): Share!
 	deleteDocument(id: ID!): Boolean!
-	newDocument(id: ID!): Document!
 }
-
