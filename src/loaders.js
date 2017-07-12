@@ -3,10 +3,11 @@ import 'isomorphic-fetch';
 
 import { BatchLoader, Loader } from './loader';
 import { throwOnFail } from './errors';
+import { filter } from './utils';
 
 // Called usually once per request to create the caches responsible for holding
 // on to data.
-export const create = ({ base, transform = nop}) => ({
+export const create = ({ base, transform }) => ({
   library: Library({ base, transform }),
   libraryFolders: LibraryFolders({ base, transform }),
   folder: Folder({ base, transform }),
@@ -156,13 +157,4 @@ const Document = ({ base, transform }) => new Loader({
     return body;
   },
 });
-
-const nop = (arg) => arg;
-
-const filter = (obj) =>
-  Object.entries(obj)
-    .reduce(
-      (acc, [k, v]) => { if (v) { acc[k] = v }; return acc; },
-      {},
-    );
 

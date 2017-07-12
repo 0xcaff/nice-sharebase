@@ -1,7 +1,34 @@
 import { makeExecutableSchema } from 'graphql-tools';
+
 import { resolvers } from './resolvers';
+import { create } from './loaders';
+import { nop, toss } from './utils';
 import rawSchema from './schema.graphql';
 
-export { create } from './loaders';
-
 export const schema = makeExecutableSchema({typeDefs: [rawSchema], resolvers});
+
+// A to create the context for the nice-sharebase schema. The context holds the
+// sessions and loaders responsible for making request sto the ShareBase API.
+export const createContext = ({
+  // The base url of the official ShareBase API we will be resolving request
+  // against.
+  base = toss(new TypeError('base is a required param to createCotnext')),
+
+  // A function which takes in a Request, modifies it and returns the request to
+  // send to the official ShareBase API. transform will always only be called
+  // before a request is made to the official ShareBase API.
+  transform = nop,
+
+  // A place to keep newly created sessions and retrive informatino about
+  // existing sessions. This can be any map like object (set, get, has, clear,
+  // delete, values). This should be persisted between requests.
+  sessionStore = toss(new TypeError('sessionStore is a required param to createContext')),
+
+  // A token to use to authenticate against the endpoint. This can be a
+  // BOX-TOKEN or PHONIEX-TOKEN. See the Query type for more information about
+  // authentication.
+  token,
+}) => {
+  const loaders = create({ base, transform });
+  return { base, transform, loaders, sessionStore, token };
+};

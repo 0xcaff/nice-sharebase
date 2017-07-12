@@ -1,19 +1,6 @@
-const get = (prop) => (obj) => obj[prop];
-
-export const getters = (kvs) =>
-  Object.entries(kvs)
-    .reduce(
-      (acc, [key, value]) => {
-        if (value instanceof Function) {
-          // just copy it
-          acc[key] = value;
-        } else {
-          acc[key] = get(value);
-        }
-        return acc;
-      },
-      {},
-    );
+import path from 'path';
+import { getters, base64Encode, token } from './utils';
+import { auth } from './mutations';
 
 export const resolvers = {
   Query: {
@@ -28,7 +15,20 @@ export const resolvers = {
 
     document: (obj, args, { loaders: { document } }) =>
       document.load(args['id']),
+
+    // TODO: implement me
   },
+
+  Mutation: {
+    authenticate: (obj, args, context) =>
+      auth(args['email'], args['password'], context),
+  },
+
+  Authed: getters({
+    token: "Token",
+    name: "UserName",
+    id: "UserId",
+  }),
 
   Library: getters({
     id: "LibraryId",
@@ -58,10 +58,6 @@ export const resolvers = {
     id: "DocumentId",
     name: "DocumentName",
     modified: "DateModified",
-
-    // contents(obj, args, context) {
-    //   // TODO: Implement
-    // },
   }),
 };
 

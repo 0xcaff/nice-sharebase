@@ -36,6 +36,7 @@ type Document {
 # want to use the original ShareBase API for authentication, you can pass tokens
 # using the PHOENIX-TOKEN scheme to this header also.
 type Query {
+	me: Authed!
 	libraries: [Library]!
 	library(id: ID!): Library!
 	folder(id: ID!): Folder!
@@ -46,8 +47,12 @@ type Authed {
 	# As long as you specify this string in your requests' Authorization header,
 	# you will be able to access protected resources on the server.
 	token: ID!
-	username: String!
-	userId: ID!
+
+	# The name of the currently signed in user.
+	name: String!
+
+	# The id of the currently signed in user.
+	id: ID!
 }
 
 type Share {
@@ -75,19 +80,19 @@ input ShareInput {
 }
 
 type Mutation {
-	# Registers your credentials with the server and creates a new session. If
-	# the provided credentials are invalid, an error is returned. The
-	# credentials will be held on the server until all the user's sessions are
-	# revoked. The token in the response allows you to make authenticated
-	# requests with this API until the session is revoked.
-	authenticate(username: String!, password: String!): Authed!
+	# Registers your credentials with the server and creates a new session if
+	# the provided credentials are valid.  credentials will be held on the
+	# server until all the user's sessions are revoked. The token in the
+	# response allows you to make authenticated requests with this API until the
+	# session is revoked.
+	authenticate(email: String!, password: String!): Authed!
 
 	# Revokes a session. If the credentials are incorrect, an error is returned.
-	revokeSession(username: String!, password: String!, session: ID!): Boolean!
+	revokeSession(email: String!, password: String!, session: ID!): Boolean!
 
 	# Revokes all sessions held by the user. If the credentials are incorrect,
 	# an error is returned.
-	revokeAll(username: String!, password: String!): Boolean!
+	revokeAll(email: String!, password: String!): Boolean!
 
 	# Creates a new phoenix token for direct communication with the orignal
 	# ShareBase API. Be careful with this token because it cannot be revoked. It
