@@ -6,12 +6,12 @@ const root = path.resolve(__dirname, '../');
 
 // Returns the result of the first value in elems send through predicate which didn't throw an error.
 export async function first(elems, predicate) {
-	for (let elem of elems) {
-		const { result, error } = await tryIt(_ => predicate(elem));
-		if (!error) {
-			return result;
-		}
-	}
+  for (let elem of elems) {
+    const { result, error } = await tryIt(() => predicate(elem));
+    if (!error) {
+      return result;
+    }
+  }
 }
 
 // Wraps fs.readFile to use promises.
@@ -49,10 +49,10 @@ export async function embedIfNeeded(folder, location) {
     // try to embed folders
     const file = path.resolve(__dirname, `api/folders/${id}/folders.json`);
 
-    const { result, error } = await tryIt(_ => readFile(file));
+    const { result, error } = await tryIt(() => readFile(file));
     if (!error && result) {
       const folders = JSON.parse(result);
-      folder["Embedded"]["Folders"].push(...folders);
+      folder['Embedded']['Folders'].push(...folders);
     }
   }
 
@@ -61,22 +61,22 @@ export async function embedIfNeeded(folder, location) {
     // try to embed documents
     const file = path.resolve(__dirname, `api/folders/${id}/documents.json`);
 
-    const { result, error } = await tryIt(_ => readFile(file));
+    const { result, error } = await tryIt(() => readFile(file));
     if (!error && result) {
       const documents = JSON.parse(result);
-      folder["Embedded"]["Documents"].push(...documents);
+      folder['Embedded']['Documents'].push(...documents);
     }
   }
 
   return JSON.stringify(folder);
-};
+}
 
 export async function handle(p) {
   const location = url.parse(p);
   p = location.pathname.slice(1);
 
-	const paths = [`${p}.json`, `${p}/index.json`]
- 		.map(raw => path.resolve(__dirname, raw));
+  const paths = [`${p}.json`, `${p}/index.json`]
+    .map(raw => path.resolve(__dirname, raw));
 
   const result = await first(paths, path => readFile(path));
   if (result !== undefined) {
@@ -87,8 +87,8 @@ export async function handle(p) {
     return { status, message, headers };
   } else {
     const status = 404;
-		const pre = `Path not found for ${p}. Tried:`;
-		const tried = paths.map(p => '\t' + path.relative(root, p)).join('\n');
+    const pre = `Path not found for ${p}. Tried:`;
+    const tried = paths.map(p => '\t' + path.relative(root, p)).join('\n');
     const message = pre + '\n' + tried;
 
     return { status, message };

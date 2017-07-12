@@ -1,5 +1,4 @@
-import path from 'path';
-import { getters, base64Encode, token } from './utils';
+import { getters } from './utils';
 import { auth } from './mutations';
 
 export const resolvers = {
@@ -25,23 +24,23 @@ export const resolvers = {
   },
 
   Authed: getters({
-    token: "Token",
-    name: "UserName",
-    id: "UserId",
+    token: 'Token',
+    name: 'UserName',
+    id: 'UserId',
   }),
 
   Library: getters({
-    id: "LibraryId",
-    name: "LibraryName",
-    isPrivate: "IsPrivate",
+    id: 'LibraryId',
+    name: 'LibraryName',
+    isPrivate: 'IsPrivate',
 
     folders: (obj, args, { loaders: { libraryFolders } }) =>
       libraryFolders.load(obj['LibraryId']),
   }),
 
   Folder: getters({
-    id: "FolderId",
-    name: "FolderName",
+    id: 'FolderId',
+    name: 'FolderName',
 
     folders: async (obj, args, { loaders: { folder } }) => {
       const f = await folder.load(obj['FolderId'], { folders: true });
@@ -55,9 +54,9 @@ export const resolvers = {
   }),
 
   Document: getters({
-    id: "DocumentId",
-    name: "DocumentName",
-    modified: "DateModified",
+    id: 'DocumentId',
+    name: 'DocumentName',
+    modified: 'DateModified',
   }),
 };
 

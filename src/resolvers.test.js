@@ -4,14 +4,12 @@ import { graphql } from 'graphql';
 import { schema, createContext } from './schema';
 import { logs, ENDPOINT } from '../mock/setup';
 
-import { FetchError } from './errors';
-
 const base = url.resolve(ENDPOINT, 'api/');
 let context = null;
 beforeEach(() => context = createContext({ base, sessionStore: new Map() }));
 
 it('should get all library names', async () => {
-  const resp = await graphql(schema, "{ libraries { name } }", undefined, context);
+  const resp = await graphql(schema, '{ libraries { name } }', undefined, context);
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -19,14 +17,14 @@ it('should get all library names', async () => {
 });
 
 it('should fail explicitly when fetching a non-existing resource', async () => {
-  const resp = await graphql(schema, "{ library(id: 42069) { name } }", undefined, context);
+  const resp = await graphql(schema, '{ library(id: 42069) { name } }', undefined, context);
 
   expect(resp.errors).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 
 it('should only make the required requests on complex queries', async () => {
-  const resp = await graphql(schema, `{ library(id: 406) { folders { name folders { name } documents { name } } } }`, undefined, context);
+  const resp = await graphql(schema, '{ library(id: 406) { folders { name folders { name } documents { name } } } }', undefined, context);
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -34,7 +32,7 @@ it('should only make the required requests on complex queries', async () => {
 });
 
 it('should resolve documents', async () => {
-  const resp = await graphql(schema, `{ document(id: 19749) { name } }`, undefined, context);
+  const resp = await graphql(schema, '{ document(id: 19749) { name } }', undefined, context);
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -42,15 +40,15 @@ it('should resolve documents', async () => {
 });
 
 it('should hit the cache when getting the same library resources multiple times', async () => {
-  const resp = await graphql(schema, `{ library(id: 406) { name folders { name } } libraries { id name folders { name } } }`, undefined, context);
+  const resp = await graphql(schema, '{ library(id: 406) { name folders { name } } libraries { id name folders { name } } }', undefined, context);
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 
-it(`should fail explicitly when a single library resources doesn't exist while fetching many`, async () => {
-  const resp = await graphql(schema, `{ library(id: 406) { name } libOne: library(id: 420) { name } }`, undefined, context);
+it('should fail explicitly when a single library resources doesn\'t exist while fetching many', async () => {
+  const resp = await graphql(schema, '{ library(id: 406) { name } libOne: library(id: 420) { name } }', undefined, context);
 
   expect(resp.errors).toMatchSnapshot();
   expect(resp.data).toBeFalsy();

@@ -9,7 +9,7 @@ it('should create getters', () => {
   const acc = getters({
     id: 'agent',
     op: 'operation',
-    realFunc: (obj) => 420,
+    realFunc: () => 420,
   });
 
   expect(acc.id(data)).toBe(data['agent']);
@@ -18,7 +18,7 @@ it('should create getters', () => {
 });
 
 it('should base64 encode things', () => {
-  const input = `sam.babic@onbase.com:password`;
+  const input = 'sam.babic@onbase.com:password';
   const encoded = base64Encode(input);
 
   expect(encoded).toEqual('c2FtLmJhYmljQG9uYmFzZS5jb206cGFzc3dvcmQ=');

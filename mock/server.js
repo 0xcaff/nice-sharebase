@@ -1,5 +1,4 @@
 // Creates an express server to serve the mock data.
-import path from 'path';
 import express from 'express';
 import { handle } from './utils';
 const app = express();
@@ -7,7 +6,7 @@ const app = express();
 // handle all paths dynamically
 app.get('/api/*', (req, res, next) => {
   h(req, res)
-    .then(_ => next())
+    .then(() => next())
     .catch(err => console.error(err));
 });
 

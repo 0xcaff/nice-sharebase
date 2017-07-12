@@ -29,7 +29,7 @@ class LibraryLoader extends BatchLoader {
     // find minimum required work, we will only have one qualifying promise
     // because of the cache
     const gettingAll = queue.length > 1 ||
-      queue.some(({ id, extras, resolve, reject }) => extras === 'all');
+      queue.some(({ extras }) => extras === 'all');
 
     if (gettingAll) {
       // if we fail here, the entire batch will fail transiently
@@ -70,7 +70,7 @@ class LibraryLoader extends BatchLoader {
 }
 
 const LibraryFolders = ({ base, transform }) => new Loader({
-  fetchFn: async (id, extras) => {
+  fetchFn: async (id) => {
     const path = url.resolve(base, `libraries/${id}/folders`);
     const req = transform(new Request(path));
     const resp = await throwOnFail(await fetch(req));
@@ -139,9 +139,9 @@ export class FolderLoader extends BatchLoader {
             const resp = await throwOnFail(await fetch(req));
             const body = await resp.json();
 
-            promiseFuncs.forEach(({ resolve, reject }) => resolve(body));
+            promiseFuncs.forEach(({ resolve }) => resolve(body));
           } catch(e) {
-            promiseFuncs.forEach(({ resolve, reject }) => reject(e));
+            promiseFuncs.forEach(({ reject }) => reject(e));
           }
         })
     );
@@ -149,7 +149,7 @@ export class FolderLoader extends BatchLoader {
 }
 
 const Document = ({ base, transform }) => new Loader({
-  fetchFn: async (id, extras) => {
+  fetchFn: async (id) => {
     const path = url.resolve(base, `documents/${id}`);
     const req = transform(new Request(path));
     const resp = await throwOnFail(await fetch(req));

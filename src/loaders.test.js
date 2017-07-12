@@ -19,7 +19,7 @@ it('should batch loads to folders and documents in a folder', async () => {
 
   expect(data[0]).toEqual(data[1]);
   expect(data[1]).toEqual(data[2]);
-  expect(data[0]["Embedded"]).toMatchSnapshot();
+  expect(data[0]['Embedded']).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 

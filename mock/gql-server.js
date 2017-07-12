@@ -8,14 +8,14 @@ import { ENDPOINT, logs } from './setup';
 const app = express();
 
 app.use('/graphql', gql(
-  async (req, res, params) => {
+  async () => {
     const base = url.resolve(ENDPOINT, 'api/');
     const context = createContext({ base });
 
     return {
       schema,
       context,
-      extensions: (document, variables, operationName, result) => {
+      extensions: () => {
         const l = logs.slice();
         logs.length = 0;
         return l;
@@ -26,4 +26,4 @@ app.use('/graphql', gql(
   }
 ));
 
-app.listen(3010, '0.0.0.0', _ => console.log('listening on 0.0.0.0:3010'));
+app.listen(3010, '0.0.0.0', () => console.log('listening on 0.0.0.0:3010'));

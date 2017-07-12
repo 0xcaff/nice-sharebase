@@ -12,13 +12,13 @@ export class BatchLoader {
 
   // Checks whether something is in the cache. Override this to check whether
   // the extras are enough.
-  getFromCache(id, reqExtras) {
+  getFromCache(id) {
     const cached = this.cache.get(id);
     if (!cached) {
       return null;
     }
 
-    const { extras, promise } = cached;
+    const { promise } = cached;
     return promise;
   }
 
@@ -45,7 +45,7 @@ export class BatchLoader {
         // promise microtask queue is exhausted. The promise microtask queue can
         // be added to by things on the promise microtask queue.
 
-        Promise.resolve().then(_ => process.nextTick(_ => this.dispatch()));
+        Promise.resolve().then(() => process.nextTick(() => this.dispatch()));
       }
     });
 
@@ -57,8 +57,8 @@ export class BatchLoader {
 
   // Called by dispatch when it is time to load the batched queries. This method
   // is responsible for notifying promises about results and failures.
-  batchLoad(queue) {
-    throw new TypeError(`You need to implement this method.`);
+  batchLoad() {
+    throw new TypeError('You need to implement this method.');
   }
 
   // Call when you want promises from load to be resolved.
@@ -71,7 +71,7 @@ export class BatchLoader {
       await this.batchLoad(queue);
     } catch (e) {
       // we encountered some kind of error, fail all promises
-      queue.forEach(({ id, extras, resolve, reject }) => {
+      queue.forEach(({ id, reject }) => {
         reject(e);
 
         // remove from cache so the next time load is called, we fetch new data
@@ -92,7 +92,7 @@ export class Loader {
     this.fetch = fetchFn.bind(this);
   }
 
-  tryCache(id, extras) {
+  tryCache(id) {
     return this.cache.get(id);
   }
 

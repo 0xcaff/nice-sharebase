@@ -30,18 +30,18 @@ export const nop = (arg) => arg;
 export const filter = (obj) =>
   Object.entries(obj)
     .reduce(
-      (acc, [k, v]) => { if (v) { acc[k] = v }; return acc; },
+      (acc, [k, v]) => { if (v) { acc[k] = v } return acc; },
       {},
     );
 
 // Creates a cryptographically random sequence of characters.
-export const token = async _ => base64Encode(await rand(256));
+export const token = async () => base64Encode(await rand(256));
 
 // Wraps the crypto.randomBytes API to use promises.
 const rand = (size) =>
   new Promise((resolve, reject) =>
     crypto.randomBytes(size, (err, buf) => {
-      if (err) { reject(err) };
+      if (err) { reject(err) }
       resolve(buf);
     })
   );
@@ -49,4 +49,3 @@ const rand = (size) =>
 // A functional way to throw errors. This is useful for throwing errors when
 // destructuring an object when a value isn't provided.
 export const toss = (err) => { throw err };
-
