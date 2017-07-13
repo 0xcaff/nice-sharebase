@@ -3,14 +3,16 @@ import express from 'express';
 import url from 'url';
 import { schema, createContext } from '../index.js';
 
-import { ENDPOINT, logs } from './setup';
+import { setup, DEFAULT_ENDPOINT, logs } from './setup';
 
+setup();
 const app = express();
+const sessionStore = new Map();
 
 app.use('/graphql', gql(
   async () => {
-    const base = url.resolve(ENDPOINT, 'api/');
-    const context = createContext({ base });
+    const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
+    const context = createContext({ base, sessionStore });
 
     return {
       schema,

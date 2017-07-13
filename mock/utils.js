@@ -2,7 +2,15 @@ import fs from 'fs';
 import url, { URLSearchParams } from 'url';
 import path from 'path';
 
+const ContentTypeJSON = {'Content-Type': 'application/json'};
 const root = path.resolve(__dirname, '../');
+
+const after = (date, n, what) => { date[`set${what}`](n); return date };
+
+let i = 0;
+const getNextId = () => i++;
+
+const base64Decode = (encoded) => Buffer.from(encoded, 'base64');
 
 // Returns the result of the first value in elems send through predicate which didn't throw an error.
 export async function first(elems, predicate) {
@@ -71,7 +79,22 @@ export async function embedIfNeeded(folder, location) {
   return JSON.stringify(folder);
 }
 
-export async function handle(p) {
+// Handles returning data for routes which require authentication.
+export async function handle(p, headers, allowed, authEnabled) {
+  if (authEnabled) {
+    const { creds, resp } = getCreds(headers, 'PHOENIX-TOKEN');
+    if (resp) {
+      return resp;
+    }
+
+    if (!allowed.has(creds)) {
+      const status = 401;
+      const message = "The authorization token isn't valid";
+
+      return { status, message };
+    }
+  }
+
   const location = url.parse(p);
   p = location.pathname.slice(1);
 
@@ -93,4 +116,59 @@ export async function handle(p) {
 
     return { status, message };
   }
+}
+
+// Given some http headers, gets the type and credentials from the authorization
+// header.
+function parseAuth(headers) {
+  const auth = headers['authorization'];
+  const [ prefix, credentials ] = auth.split(' ');
+  return { prefix, credentials };
+
+}
+
+function getCreds(headers, type) {
+  const { prefix, credentials } = parseAuth(headers);
+  if (prefix.toUpperCase() !== type.toUpperCase()) {
+    const creds = null;
+
+    const status = 400;
+    const message = 'The format of the auth token is invalid';
+    const resp = { status, message };
+
+    return { creds, resp };
+  }
+
+  return { creds: credentials };
+}
+
+export function authenticate(headers, allowed, users) {
+  const { creds, resp } = getCreds(headers, 'Basic');
+  if (resp) {
+    return resp;
+  }
+
+  const plain = base64Decode(creds);
+  if (!users.has(plain)) {
+    // the user isn't registered
+    const status = 401;
+    const message = "Who are you?";
+
+    return { status, message };
+  }
+
+  const [ email ] = plain.split(':');
+
+  // user is registered
+  allowed.add(creds);
+
+  const status = 200;
+  const message = JSON.stringify({
+    Token: Math.floor(Math.random() * Number.MAX_VALUE).toString(),
+    UserName: email,
+    UserId: getNextId(),
+    ExpirationDate: after(new Date(), 60, 'minutes'),
+  });
+
+  return { status, headers: ContentTypeJSON, message };
 }

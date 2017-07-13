@@ -1,4 +1,4 @@
-import path from 'path';
+import url from 'url';
 
 import { base64Encode, token } from './utils';
 import { throwOnFail } from './errors';
@@ -15,7 +15,7 @@ export const auth = async (email, password, { base, transform, sessionStore }) =
 
   // TODO: It's time to abstract the network layer away. Also log requests in
   // the app network layer instead of the mock network layer.
-  const endpoint = path.resolve(base, '/api/authenticate');
+  const endpoint = url.resolve(base, 'authenticate');
   const request = new Request(endpoint, { headers: headers });
   const resp = await throwOnFail(await fetch(transform(request)));
   const res = await resp.json();

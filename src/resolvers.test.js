@@ -1,12 +1,23 @@
 import url from 'url';
+import nock from 'nock';
 import { graphql } from 'graphql';
 
 import { schema, createContext } from './schema';
-import { logs, ENDPOINT } from '../mock/setup';
+import { setup, logs, DEFAULT_ENDPOINT } from '../mock/setup';
 
-const base = url.resolve(ENDPOINT, 'api/');
+const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
+
 let context = null;
-beforeEach(() => context = createContext({ base, sessionStore: new Map() }));
+let nockApp = null;
+
+beforeEach(() => {
+  nockApp = setup({ authEnabled: false, });
+  context = createContext({ base, sessionStore: new Map() });
+});
+
+afterEach(() => {
+  nock.removeInterceptor(nockApp);
+});
 
 it('should get all library names', async () => {
   const resp = await graphql(schema, '{ libraries { name } }', undefined, context);

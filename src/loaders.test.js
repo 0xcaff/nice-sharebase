@@ -1,9 +1,10 @@
 import url from 'url';
 
 import { FolderLoader } from './loaders';
-import { logs, ENDPOINT } from '../mock/setup';
+import { setup, logs, DEFAULT_ENDPOINT } from '../mock/setup';
 
-const base = url.resolve(ENDPOINT, 'api/');
+setup({ authEnabled: false });
+const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
 
 it('should batch loads to folders and documents in a folder', async () => {
   const loader = new FolderLoader({ base, transform: (r) => r, autoDispatch: false });
