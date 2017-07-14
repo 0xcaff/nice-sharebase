@@ -2,15 +2,13 @@ import fs from 'fs';
 import url, { URLSearchParams } from 'url';
 import path from 'path';
 
+import { base64Decode, MINUTES, token } from '../src/utils';
+
 const ContentTypeJSON = {'Content-Type': 'application/json'};
 const root = path.resolve(__dirname, '../');
 
-const after = (date, n, what) => { date[`set${what}`](n); return date };
-
 let i = 0;
 const getNextId = () => i++;
-
-const base64Decode = (encoded) => Buffer.from(encoded, 'base64');
 
 // Returns the result of the first value in elems send through predicate which didn't throw an error.
 export async function first(elems, predicate) {
@@ -118,15 +116,6 @@ export async function handle(p, headers, allowed, authEnabled) {
   }
 }
 
-// Given some http headers, gets the type and credentials from the authorization
-// header.
-function parseAuth(headers) {
-  const auth = headers['authorization'];
-  const [ prefix, credentials ] = auth.split(' ');
-  return { prefix, credentials };
-
-}
-
 function getCreds(headers, type) {
   const { prefix, credentials } = parseAuth(headers);
   if (prefix.toUpperCase() !== type.toUpperCase()) {
@@ -164,11 +153,19 @@ export function authenticate(headers, allowed, users) {
 
   const status = 200;
   const message = JSON.stringify({
-    Token: Math.floor(Math.random() * Number.MAX_VALUE).toString(),
+    Token: token(),
     UserName: email,
     UserId: getNextId(),
-    ExpirationDate: after(new Date(), 60, 'minutes'),
+    ExpirationDate: new Date(+Date.now() + 10 * MINUTES),
   });
 
   return { status, headers: ContentTypeJSON, message };
+}
+
+// Given some http headers, gets the type and credentials from the authorization
+// header.
+function parseAuth(headers) {
+  const [ auth ] = headers['authorization'];
+  const [ prefix, credentials ] = auth.split(' ');
+  return { prefix, credentials };
 }

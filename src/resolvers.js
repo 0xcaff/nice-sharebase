@@ -1,4 +1,4 @@
-import { getters } from './utils';
+import { getters, required } from './utils';
 import { auth } from './mutations';
 
 export const resolvers = {
@@ -15,7 +15,8 @@ export const resolvers = {
     document: (obj, args, { loaders: { document } }) =>
       document.load(args['id']),
 
-    // TODO: implement me
+    me: (obj, args, { session: { authed } = required('session', 'me'),
+      token }) => ({ ...authed, Token: token }),
   },
 
   Mutation: {
@@ -59,4 +60,3 @@ export const resolvers = {
     modified: 'DateModified',
   }),
 };
-

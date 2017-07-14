@@ -26,14 +26,17 @@
       "latest"
     ],
     "plugins": [
-      "babel-plugin-inline-import"
+      "babel-plugin-inline-import",
+      "transform-object-rest-spread"
     ]
   },
   "jest": {
     "testEnvironment": "node"
   },
   "eslintConfig": {
-    "plugins": [ "jest" ],
+    "plugins": [
+      "jest"
+    ],
     "env": {
       "node": true,
       "es6": true,
@@ -54,19 +57,30 @@
       "jest/no-focused-tests": "error",
       "jest/no-identical-title": "error",
       "jest/valid-expect": "error",
-      "indent": [ "error", 2 ],
-      "linebreak-style": [ "error", "unix" ],
+      "indent": [
+        "error",
+        2
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "eol-last": [
+        "error",
+        "never"
+      ],
       "no-console": "warn"
     }
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "eslint": "^4.2.0",
     "eslint-plugin-jest": "^20.0.3",
     "express": "^4.15.3",
     "express-graphql": "^0.6.6",
     "jest": "^20.0.4",
-    "nock": "^9.0.13"
+    "nock": "node-nock/nock"
   }
 }

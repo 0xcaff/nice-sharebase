@@ -1,10 +1,11 @@
 import url from 'url';
+import 'isomorphic-fetch';
 
 import { base64Encode, token } from './utils';
 import { throwOnFail } from './errors';
 
-// TODO: wire up proper authentication for everything else (including nock mock)
-// TODO: write tests
+// TODO: test me endpoint
+// TODO: wire up proper authentication for everything
 
 export const auth = async (email, password, { base, transform, sessionStore }) => {
   const inner = base64Encode(`${email}:${password}`);
@@ -22,14 +23,13 @@ export const auth = async (email, password, { base, transform, sessionStore }) =
 
   // create a new session
   const delegate = await token();
-  sessionStore.put(delegate, {
-    expires: +new Date(res['ExpirationDate']),
-    name: res['UserName'],
-    id: res['UserId'],
+
+  sessionStore.set(delegate, {
+    expires: +Date.parse(res['ExpirationDate']),
+    authed: res,
     email,
     password,
   });
   
-  return Object.assign(res, { Token: delegate });
+  return { ...res, Token: delegate };
 };
-

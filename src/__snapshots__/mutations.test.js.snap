@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should authenticate with the backend 1`] = `
+Object {
+  "ExpirationDate": "2017-07-14T02:50:00.000Z",
+  "Token": "Session2",
+  "UserId": 0,
+  "UserName": "sam.babic@onbase.com",
+}
+`;
+
+exports[`should authenticate with the backend 2`] = `
+Map {
+  "Session2" => Object {
+    "authed": Object {
+      "ExpirationDate": "2017-07-14T02:50:00.000Z",
+      "Token": "Session1",
+      "UserId": 0,
+      "UserName": "sam.babic@onbase.com",
+    },
+    "email": "sam.babic@onbase.com",
+    "expires": 1500000600000,
+    "password": "password",
+  },
+}
+`;

@@ -21,6 +21,7 @@ export const getters = (kvs) =>
 
 // Returns a base64 encoded string of the string passed in.
 export const base64Encode = (toEncode) => Buffer.from(toEncode).toString('base64');
+export const base64Decode = (encoded) => Buffer.from(encoded, 'base64').toString();
 
 // A function which returns its first argument.
 export const nop = (arg) => arg;
@@ -49,3 +50,10 @@ const rand = (size) =>
 // A functional way to throw errors. This is useful for throwing errors when
 // destructuring an object when a value isn't provided.
 export const toss = (err) => { throw err };
+export const required = (what, foor) =>
+  toss(new TypeError(`${what} is a required parameter to ${foor}`));
+
+export const MS = 1;
+export const SECONDS = 1000 * MS;
+export const MINUTES = 60 * SECONDS;
+export const HOURS = 60 * MINUTES;

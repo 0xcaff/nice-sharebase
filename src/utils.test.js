@@ -1,4 +1,4 @@
-import { getters, base64Encode, token, toss } from './utils';
+import { getters, base64Encode, base64Decode, token, toss } from './utils';
 
 it('should create getters', () => {
   const data = {
@@ -17,11 +17,18 @@ it('should create getters', () => {
   expect(acc.realFunc(data)).toBe(420);
 });
 
-it('should base64 encode things', () => {
+it('should base64 encode', () => {
   const input = 'sam.babic@onbase.com:password';
   const encoded = base64Encode(input);
 
   expect(encoded).toEqual('c2FtLmJhYmljQG9uYmFzZS5jb206cGFzc3dvcmQ=');
+});
+
+it('should decode base64', () => {
+  const input = 'c2FtLmJhYmljQG9uYmFzZS5jb206cGFzc3dvcmQ=';
+  const decoded = base64Decode(input);
+
+  expect(decoded).toEqual('sam.babic@onbase.com:password');
 });
 
 it('should generate random tokens', async () => {

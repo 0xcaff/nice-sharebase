@@ -157,4 +157,3 @@ const Document = ({ base, transform }) => new Loader({
     return body;
   },
 });
-

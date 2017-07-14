@@ -10,9 +10,10 @@ const app = express();
 const sessionStore = new Map();
 
 app.use('/graphql', gql(
-  async () => {
+  async req => {
     const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
-    const context = createContext({ base, sessionStore });
+    const [ authorization ] = req.headers['authorization'];
+    const context = createContext({ base, sessionStore, authorization });
 
     return {
       schema,

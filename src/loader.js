@@ -111,4 +111,3 @@ export class Loader {
     return promise;
   }
 }
-
