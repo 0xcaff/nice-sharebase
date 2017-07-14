@@ -4,8 +4,7 @@ import 'isomorphic-fetch';
 import { base64Encode, token } from './utils';
 import { throwOnFail } from './errors';
 
-// TODO: test me endpoint
-// TODO: wire up proper authentication for everything
+// TODO: wire up proper authentication for everything (nock should verify too)
 
 export const auth = async (email, password, { base, transform, sessionStore }) => {
   const inner = base64Encode(`${email}:${password}`);

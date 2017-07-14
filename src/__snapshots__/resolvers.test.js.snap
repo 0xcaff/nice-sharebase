@@ -45,6 +45,18 @@ Array [
 ]
 `;
 
+exports[`should get information about the authenticated user 1`] = `
+Object {
+  "me": Object {
+    "id": "420",
+    "name": "Sam Babic",
+    "token": "TESTINGSESSION",
+  },
+}
+`;
+
+exports[`should get information about the authenticated user 2`] = `Array []`;
+
 exports[`should hit the cache when getting the same library resources multiple times 1`] = `
 Object {
   "libraries": Array [

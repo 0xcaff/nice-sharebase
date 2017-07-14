@@ -1,9 +1,12 @@
+import '../mock/date';
+
 import url from 'url';
 import nock from 'nock';
 import { graphql } from 'graphql';
 
 import { schema, createContext } from './schema';
 import { setup, logs, DEFAULT_ENDPOINT } from '../mock/setup';
+import { MINUTES } from './utils';
 
 const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
 
@@ -11,16 +14,45 @@ let context = null;
 let nockApp = null;
 
 beforeEach(() => {
-  nockApp = setup({ authEnabled: false, });
-  context = createContext({ base, sessionStore: new Map() });
+  // add a session to the nock backend
+  const backendToken = 'GODMODETOKEN';
+  const allowed = new Set([backendToken]);
+  nockApp = setup({ authEnabled: false, allowed });
+
+  // add session info context
+  const sessionStore = new Map();
+  const testSessionToken = 'TESTINGSESSION';
+  const expires = new Date(+Date.now() + 10 * MINUTES);
+
+  // add session
+  sessionStore.set(testSessionToken, {
+    expires: +expires,
+    authed: {
+      Token: backendToken,
+      UserName: "Sam Babic",
+      UserId: 420,
+      ExpirationDate: expires.toString(),
+    },
+    email: 'sam.babic@onbase.com',
+    password: 'password',
+  });
+
+  context = createContext({
+    authorization: `BOX-TOKEN ${testSessionToken}`,
+    base, sessionStore,
+  });
 });
 
 afterEach(() => {
   nock.removeInterceptor(nockApp);
+  context = null;
 });
 
+// executes a graphql query using mocked stuff
+const query = (query) => graphql(schema, query, undefined, context);
+
 it('should get all library names', async () => {
-  const resp = await graphql(schema, '{ libraries { name } }', undefined, context);
+  const resp = await query('{ libraries { name } }');
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -28,14 +60,14 @@ it('should get all library names', async () => {
 });
 
 it('should fail explicitly when fetching a non-existing resource', async () => {
-  const resp = await graphql(schema, '{ library(id: 42069) { name } }', undefined, context);
+  const resp = await query('{ library(id: 42069) { name } }');
 
   expect(resp.errors).toMatchSnapshot();
   expect(logs).toMatchSnapshot();
 });
 
 it('should only make the required requests on complex queries', async () => {
-  const resp = await graphql(schema, '{ library(id: 406) { folders { name folders { name } documents { name } } } }', undefined, context);
+  const resp = await query('{ library(id: 406) { folders { name folders { name } documents { name } } } }');
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -43,7 +75,7 @@ it('should only make the required requests on complex queries', async () => {
 });
 
 it('should resolve documents', async () => {
-  const resp = await graphql(schema, '{ document(id: 19749) { name } }', undefined, context);
+  const resp = await query('{ document(id: 19749) { name } }');
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -51,7 +83,7 @@ it('should resolve documents', async () => {
 });
 
 it('should hit the cache when getting the same library resources multiple times', async () => {
-  const resp = await graphql(schema, '{ library(id: 406) { name folders { name } } libraries { id name folders { name } } }', undefined, context);
+  const resp = await query('{ library(id: 406) { name folders { name } } libraries { id name folders { name } } }');
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
@@ -59,9 +91,17 @@ it('should hit the cache when getting the same library resources multiple times'
 });
 
 it('should fail explicitly when a single library resources doesn\'t exist while fetching many', async () => {
-  const resp = await graphql(schema, '{ library(id: 406) { name } libOne: library(id: 420) { name } }', undefined, context);
+  const resp = await query('{ library(id: 406) { name } libOne: library(id: 420) { name } }');
 
   expect(resp.errors).toMatchSnapshot();
   expect(resp.data).toBeFalsy();
   expect(logs).toMatchSnapshot();
+});
+
+it('should get information about the authenticated user', async () => {
+  const resp = await query('{ me { token name id } }');
+
+  expect(resp.errors).toBeFalsy();
+  expect(resp.data).toMatchSnapshot();
+  expect(logs).toMatchSnapshot(); // the logs should be empty because there were no network requests made
 });
