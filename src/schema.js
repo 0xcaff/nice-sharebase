@@ -3,6 +3,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { resolvers } from './resolvers';
 import { create } from './loaders';
 import { nop, required } from './utils';
+import { initNetwork } from './network';
 import rawSchema from './schema.graphql';
 
 export const schema = makeExecutableSchema({typeDefs: [rawSchema], resolvers});
@@ -29,10 +30,17 @@ export const createContext = ({
   // authentication.
   authorization,
 }) => {
-  const loaders = create({ base, transform });
-  const { session, token } = tryGetSession(sessionStore, authorization);
+  const { session: me, token } = tryGetSession(sessionStore, authorization);
+  const session = { me, store: sessionStore };
 
-  return { base, transform, loaders, sessionStore, token, session };
+  // Information about the requests which were made to the official ShareBase
+  // API to fulfill the query / mutation.
+  const logs = [];
+
+  const network = initNetwork({ base, transform, logs, session });
+  const loaders = create({ network });
+
+  return { loaders, network, session, token, logs };
 };
 
 // Tries to get a session from the given information. If there isn't enough

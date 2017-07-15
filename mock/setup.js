@@ -5,11 +5,6 @@ import { handle, authenticate } from './utils';
 
 export const DEFAULT_ENDPOINT = 'http://mock.com/';
 
-// TODO: move this log wrangling
-export const logs = [];
-
-global.beforeEach && beforeEach(() => logs.length = 0);
-
 const promisify = (inner) =>
   function promiseWrapper(url, body, cb) {
     inner(this.req)
@@ -19,12 +14,9 @@ const promisify = (inner) =>
 
 const translate = (inner) =>
   promisify(async req => {
-    log(req.path);
     const { status, message, headers } = await inner(req);
     return [ status, message, headers ];
   });
-
-const log = (path) => logs.push(path);
 
 // Setups nock to intercept and handle HTTP requests.
 export const setup = ({

@@ -8,7 +8,7 @@ Array [
 
 exports[`should fail explicitly when a single library resources doesn't exist while fetching many 2`] = `
 Array [
-  "/api/libraries",
+  "http://mock.com/api/libraries",
 ]
 `;
 
@@ -22,7 +22,7 @@ Array [
 
 exports[`should fail explicitly when fetching a non-existing resource 2`] = `
 Array [
-  "/api/libraries/42069",
+  "http://mock.com/api/libraries/42069",
 ]
 `;
 
@@ -41,7 +41,7 @@ Object {
 
 exports[`should get all library names 2`] = `
 Array [
-  "/api/libraries",
+  "http://mock.com/api/libraries",
 ]
 `;
 
@@ -92,9 +92,9 @@ Object {
 
 exports[`should hit the cache when getting the same library resources multiple times 2`] = `
 Array [
-  "/api/libraries",
-  "/api/libraries/406/folders",
-  "/api/libraries/1782/folders",
+  "http://mock.com/api/libraries",
+  "http://mock.com/api/libraries/406/folders",
+  "http://mock.com/api/libraries/1782/folders",
 ]
 `;
 
@@ -125,9 +125,9 @@ Object {
 
 exports[`should only make the required requests on complex queries 2`] = `
 Array [
-  "/api/libraries/406",
-  "/api/libraries/406/folders",
-  "/api/folders/6890?embed=f,d",
+  "http://mock.com/api/libraries/406",
+  "http://mock.com/api/libraries/406/folders",
+  "http://mock.com/api/folders/6890?embed=f,d",
 ]
 `;
 
@@ -141,6 +141,6 @@ Object {
 
 exports[`should resolve documents 2`] = `
 Array [
-  "/api/documents/19749",
+  "http://mock.com/api/documents/19749",
 ]
 `;

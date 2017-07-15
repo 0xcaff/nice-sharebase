@@ -19,7 +19,7 @@ Object {
 
 exports[`should automatically execute loader.dispatch 2`] = `
 Array [
-  "/api/folders/6890",
+  "http://mock.com/api/folders/6890",
 ]
 `;
 
@@ -66,7 +66,7 @@ Object {
 
 exports[`should batch loads to folders and documents in a folder 2`] = `
 Array [
-  "/api/folders/6890?embed=f,d",
+  "http://mock.com/api/folders/6890?embed=f,d",
 ]
 `;
 
@@ -89,6 +89,6 @@ Object {
 
 exports[`should cache loads for a folder between dispatches 2`] = `
 Array [
-  "/api/folders/6890",
+  "http://mock.com/api/folders/6890",
 ]
 `;

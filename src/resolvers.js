@@ -1,4 +1,4 @@
-import { getters, required } from './utils';
+import { getters } from './utils';
 import { auth } from './mutations';
 
 export const resolvers = {
@@ -15,17 +15,19 @@ export const resolvers = {
     document: (obj, args, { loaders: { document } }) =>
       document.load(args['id']),
 
-    me: (obj, args, { session: { authed } = required('session', 'me'),
-      token }) => ({ ...authed, Token: token }),
+    me: (obj, args, { session: { me: { authed } } }) =>
+      authed
   },
 
   Mutation: {
     authenticate: (obj, args, context) =>
       auth(args['email'], args['password'], context),
+
+    // TODO: implement the rest of the mutations
   },
 
   Authed: getters({
-    token: 'Token',
+    token: 'delegate',
     name: 'UserName',
     id: 'UserId',
   }),

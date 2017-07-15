@@ -3,24 +3,42 @@
 exports[`should authenticate with the backend 1`] = `
 Object {
   "ExpirationDate": "2017-07-14T02:50:00.000Z",
-  "Token": "Session2",
+  "Token": "Session1",
   "UserId": 0,
   "UserName": "sam.babic@onbase.com",
+  "delegate": "Session2",
 }
 `;
 
 exports[`should authenticate with the backend 2`] = `
-Map {
-  "Session2" => Object {
+Object {
+  "me": Object {
     "authed": Object {
       "ExpirationDate": "2017-07-14T02:50:00.000Z",
       "Token": "Session1",
       "UserId": 0,
       "UserName": "sam.babic@onbase.com",
+      "delegate": "Session2",
     },
     "email": "sam.babic@onbase.com",
     "expires": 1500000600000,
     "password": "password",
   },
+  "store": Map {
+    "Session2" => Object {
+      "authed": Object {
+        "ExpirationDate": "2017-07-14T02:50:00.000Z",
+        "Token": "Session1",
+        "UserId": 0,
+        "UserName": "sam.babic@onbase.com",
+        "delegate": "Session2",
+      },
+      "email": "sam.babic@onbase.com",
+      "expires": 1500000600000,
+      "password": "password",
+    },
+  },
 }
 `;
+
+exports[`should authenticate with the backend 3`] = `undefined`;

@@ -5,7 +5,7 @@ import nock from 'nock';
 import { graphql } from 'graphql';
 
 import { schema, createContext } from './schema';
-import { setup, logs, DEFAULT_ENDPOINT } from '../mock/setup';
+import { setup, DEFAULT_ENDPOINT } from '../mock/setup';
 import { MINUTES } from './utils';
 
 const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
@@ -17,18 +17,19 @@ beforeEach(() => {
   // add a session to the nock backend
   const backendToken = 'GODMODETOKEN';
   const allowed = new Set([backendToken]);
-  nockApp = setup({ authEnabled: false, allowed });
+  nockApp = setup({ allowed });
 
   // add session info context
   const sessionStore = new Map();
   const testSessionToken = 'TESTINGSESSION';
-  const expires = new Date(+Date.now() + 10 * MINUTES);
+  const expires = new Date(+Date.now() + 100 * MINUTES);
 
   // add session
   sessionStore.set(testSessionToken, {
     expires: +expires,
     authed: {
       Token: backendToken,
+      delegate: testSessionToken,
       UserName: "Sam Babic",
       UserId: 420,
       ExpirationDate: expires.toString(),
@@ -56,14 +57,14 @@ it('should get all library names', async () => {
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should fail explicitly when fetching a non-existing resource', async () => {
   const resp = await query('{ library(id: 42069) { name } }');
 
   expect(resp.errors).toMatchSnapshot();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should only make the required requests on complex queries', async () => {
@@ -71,7 +72,7 @@ it('should only make the required requests on complex queries', async () => {
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should resolve documents', async () => {
@@ -79,7 +80,7 @@ it('should resolve documents', async () => {
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should hit the cache when getting the same library resources multiple times', async () => {
@@ -87,7 +88,7 @@ it('should hit the cache when getting the same library resources multiple times'
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should fail explicitly when a single library resources doesn\'t exist while fetching many', async () => {
@@ -95,7 +96,7 @@ it('should fail explicitly when a single library resources doesn\'t exist while 
 
   expect(resp.errors).toMatchSnapshot();
   expect(resp.data).toBeFalsy();
-  expect(logs).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 it('should get information about the authenticated user', async () => {
@@ -103,5 +104,7 @@ it('should get information about the authenticated user', async () => {
 
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
-  expect(logs).toMatchSnapshot(); // the logs should be empty because there were no network requests made
+  expect(context.logs).toMatchSnapshot(); // the logs should be empty because there were no network requests made
 });
+
+// TODO: a me test for un-authed session

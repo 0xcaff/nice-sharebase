@@ -1,30 +1,25 @@
-import url from 'url';
-import 'isomorphic-fetch';
-
 import { BatchLoader, Loader } from './loader';
-import { throwOnFail } from './errors';
 import { filter } from './utils';
 
 // Called usually once per request to create the caches responsible for holding
 // on to data.
-export const create = ({ base, transform }) => ({
-  library: Library({ base, transform }),
-  libraryFolders: LibraryFolders({ base, transform }),
-  folder: Folder({ base, transform }),
-  document: Document({ base, transform }),
+export const create = ({ network }) => ({
+  library: Library({ network }),
+  libraryFolders: LibraryFolders({ network }),
+  folder: Folder({ network }),
+  document: Document({ network }),
 });
 
-const Library = ({ base, transform }) => new LibraryLoader({ base, transform });
+const Library = ({ network }) => new LibraryLoader({ network });
 
 class LibraryLoader extends BatchLoader {
-  constructor({ base, transform, autoDispatch }) {
+  constructor({ network, autoDispatch }) {
     super({ autoDispatch });
-    this.base = base;
-    this.transform = transform;
+    this.network = network;
   }
 
   async batchLoad(queue) {
-    const { base, transform } = this;
+    const { network } = this;
 
     // find minimum required work, we will only have one qualifying promise
     // because of the cache
@@ -33,10 +28,7 @@ class LibraryLoader extends BatchLoader {
 
     if (gettingAll) {
       // if we fail here, the entire batch will fail transiently
-      const path = url.resolve(base, 'libraries');
-      const req = transform(new Request(path));
-      const resp = await throwOnFail(await fetch(req));
-      const all = await resp.json();
+      const all = await network.request('libraries');
 
       queue.forEach(({ id, extras, resolve, reject }) => {
         if (extras === 'all') {
@@ -55,10 +47,7 @@ class LibraryLoader extends BatchLoader {
       return await Promise.all(
         queue.map(async ({ id, resolve, reject }) => {
           try {
-            const path = url.resolve(base, `libraries/${id}`);
-            const req = transform(new Request(path));
-            const resp = await throwOnFail(await fetch(req));
-            const body = await resp.json();
+            const body = await network.request(`libraries/${id}`);
             resolve(body);
           } catch(e) {
             reject(e);
@@ -69,23 +58,16 @@ class LibraryLoader extends BatchLoader {
   }
 }
 
-const LibraryFolders = ({ base, transform }) => new Loader({
-  fetchFn: async (id) => {
-    const path = url.resolve(base, `libraries/${id}/folders`);
-    const req = transform(new Request(path));
-    const resp = await throwOnFail(await fetch(req));
-    const body = await resp.json();
-    return body;
-  },
+const LibraryFolders = ({ network }) => new Loader({
+  fetchFn: async (id) => await network.request(`libraries/${id}/folders`),
 });
 
-const Folder = ({ base, transform }) => new FolderLoader({ base, transform });
+const Folder = ({ network }) => new FolderLoader({ network });
 
 export class FolderLoader extends BatchLoader {
-  constructor({ base, transform, autoDispatch }) {
+  constructor({ network, autoDispatch }) {
     super({ autoDispatch });
-    this.base = base;
-    this.transform = transform;
+    this.network = network;
   }
 
   getFromCache(id, { folders: needFolders, documents: needDocs }) {
@@ -111,7 +93,7 @@ export class FolderLoader extends BatchLoader {
   }
 
   async batchLoad(queue) {
-    const { base, transform } = this;
+    const { network } = this;
 
     // reduce into minimum required requests
     const reqs = queue.reduce(
@@ -134,10 +116,8 @@ export class FolderLoader extends BatchLoader {
               Object.keys(filter({ 'f': folders, 'd': documents }))
                 .join();
 
-            const path = url.resolve(base, `folders/${id}` + (paramsString && `?embed=${paramsString}`));
-            const req = transform(new Request(path));
-            const resp = await throwOnFail(await fetch(req));
-            const body = await resp.json();
+            const path = `folders/${id}` + (paramsString && `?embed=${paramsString}`);
+            const body = await network.request(path);
 
             promiseFuncs.forEach(({ resolve }) => resolve(body));
           } catch(e) {
@@ -148,12 +128,6 @@ export class FolderLoader extends BatchLoader {
   }
 }
 
-const Document = ({ base, transform }) => new Loader({
-  fetchFn: async (id) => {
-    const path = url.resolve(base, `documents/${id}`);
-    const req = transform(new Request(path));
-    const resp = await throwOnFail(await fetch(req));
-    const body = await resp.json();
-    return body;
-  },
+const Document = ({ network }) => new Loader({
+  fetchFn: async (id) => await network.request(`documents/${id}`),
 });

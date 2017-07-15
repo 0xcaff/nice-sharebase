@@ -2,10 +2,9 @@ import gql from 'express-graphql';
 import express from 'express';
 import url from 'url';
 import { schema, createContext } from '../index.js';
+import { setup, DEFAULT_ENDPOINT } from './setup';
 
-import { setup, DEFAULT_ENDPOINT, logs } from './setup';
-
-setup();
+setup({ authEnabled: false });
 const app = express();
 const sessionStore = new Map();
 
@@ -18,11 +17,7 @@ app.use('/graphql', gql(
     return {
       schema,
       context,
-      extensions: () => {
-        const l = logs.slice();
-        logs.length = 0;
-        return l;
-      },
+      extensions: () => context.logs,
       graphiql: true,
       pretty: true,
     };
