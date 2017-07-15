@@ -50,6 +50,7 @@ function tryGetSession(store, header) {
     return {};
   }
 
+  // TODO: support direct pheonix-token authentication schema also
   const [ prefix, creds ] = header.split(' ');
   if (prefix !== 'BOX-TOKEN') {
     return {};
