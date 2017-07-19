@@ -78,10 +78,10 @@ type Share {
 
 # Setting passed when sharing folders and documents. If expiresOn and singleUse
 # are unset, the share will never expire. If more than one is set, an exception
-# is thrown.
+# is thrown. If none are set, the link share will never expire.
 input ShareInput {
 	# The epoch time at which this share will expire.
-	expiresOn: Int!
+	expiresOn: Int
 	singleUse: Boolean
 
 	# A password which will be required when acessing the share. This password
@@ -91,7 +91,7 @@ input ShareInput {
 
 	allowView: Boolean!
 	allowDownload: Boolean!
-	allowEdit: Boolean!
+	allowUpload: Boolean!
 }
 
 type Mutation {

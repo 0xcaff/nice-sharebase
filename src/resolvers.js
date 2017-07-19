@@ -1,6 +1,8 @@
 import { getters } from './utils';
-import { auth, revoke, pnxToken, newFolder, deleteFolder,
-  deleteDoc } from './mutations';
+import { auth, revoke, pnxToken,
+  newFolder, deleteFolder, shareFolder, revokeFolderShare,
+  shareDoc, revokeDocShare, deleteDoc
+} from './mutations';
 
 export const resolvers = {
   Query: {
@@ -33,20 +35,34 @@ export const resolvers = {
     newFolder: (obj, args, context) =>
       newFolder(args['libraryId'], args['path'], context),
 
-    // TODO: Session Management Stuff
-    // TODO: shareFolder
-    // TODO: shareDocument
-
     deleteFolder: (obj, args, context) =>
       deleteFolder(args['id'], context),
+
+    shareFolder: (obj, args, context) =>
+      shareFolder(args['id'], args['input'], context),
+
+    revokeFolderShare: (obj, args, context) =>
+      revokeFolderShare(args['documentId'], args['shareId'], context),
+
+    shareDocument: (obj, args, context) =>
+      shareDoc(args['id'], args['input'], context),
+
+    revokeDocumentShare: (obj, args, context) =>
+      revokeDocShare(args['id'], args['shareId'], context),
 
     deleteDocument: (obj, args, context) =>
       deleteDoc(args['id'], context),
   },
 
   PNXToken: getters({
-    token: "Token",
+    token: 'Token',
     expires: (obj) => +new Date.parse(obj['ExpirationDate']),
+  }),
+
+  Share: getters({
+    id: 'ShareId',
+    reference: 'ReferenceString',
+    url: (obj) => obj['Links']['WebUri'],
   }),
 
   Authed: getters({
