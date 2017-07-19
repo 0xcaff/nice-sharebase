@@ -41,4 +41,44 @@ Object {
 }
 `;
 
-exports[`should authenticate with the backend 3`] = `undefined`;
+exports[`should authenticate with the backend 3`] = `
+Array [
+  "http://mock.com/api/authenticate",
+]
+`;
+
+exports[`should make requests using a phoenix token 1`] = `
+Array [
+  Object {
+    "IsPrivate": true,
+    "LibraryId": 406,
+    "LibraryName": "My Library",
+    "Links": Object {
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/libraries/406/folders",
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/libraries/406",
+    },
+  },
+  Object {
+    "IsPrivate": false,
+    "LibraryId": 1782,
+    "LibraryName": "Iron Man Suit",
+    "Links": Object {
+      "Folders": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782/folders",
+      "Self": "https://app.sharebase.com/ShareBaseAPI/api/libraries/1782",
+    },
+  },
+]
+`;
+
+exports[`should make requests using a phoenix token 2`] = `
+Object {
+  "me": null,
+  "store": Map {},
+}
+`;
+
+exports[`should make requests using a phoenix token 3`] = `
+Array [
+  "http://mock.com/api/libraries",
+]
+`;
