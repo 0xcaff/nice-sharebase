@@ -65,10 +65,6 @@
         "error",
         "unix"
       ],
-      "eol-last": [
-        "error",
-        "never"
-      ],
       "no-console": "warn"
     }
   },
