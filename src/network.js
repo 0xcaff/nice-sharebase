@@ -14,10 +14,10 @@ export const initNetwork = ({ base, transform, logs, session, token }) => {
 
 // Makes a request to the original ShareBase API getting new tokens if needed.
 const req = ({ base, transform, logs }) =>
-  async (path, headers) => {
+  async (path, init) => {
     const fullPath = url.resolve(base, path);
     logs.push(fullPath);
-    const req = transform(new Request(fullPath, { headers }));
+    const req = transform(new Request(fullPath, init));
     const resp = await throwOnFail(await fetch(req));
     const body = await resp.json();
 
@@ -35,8 +35,8 @@ const renew = ({ network, session }) =>
     const { store } = session;
 
     const inner = base64Encode(`${email}:${password}`);
-    const headers = new Headers({'Authorization': `Basic ${inner}`});
-    const authed = await network.req('authenticate', headers);
+    const headers = { 'Authorization': `Basic ${inner}` };
+    const authed = await network.req('authenticate', { headers });
 
     // update session
     if (!session.me) {
@@ -59,7 +59,7 @@ const renew = ({ network, session }) =>
   };
 
 const request = (context) =>
-  async (path) => {
+  async (path, init) => {
     const { session, token, network: { renew, req } } = context;
     const { me = required('me', 'request') } = session;
 
@@ -90,8 +90,41 @@ const request = (context) =>
     }
 
     // we have an active session with the official ShareBase, use it
-    const headers = new Headers({
-      'Authorization': `PHOENIX-TOKEN ${backendToken}`
-    });
-    return await req(path, headers);
+    const headers = { 'Authorization': `PHOENIX-TOKEN ${backendToken}` };
+    return await req(path, mergeInits(init, { headers }));
   };
+
+// Creates a fetch init object which encodes the object as JSON and sets the
+// mime type to application/json.
+export const jsonify = (obj) => ({
+  body: JSON.stringify(obj),
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Merges fetch initialization objects taking care to preserve headers.
+const mergeInits = (...args) => {
+  const definedArgs = args.filter(arg => arg !== undefined);
+
+  const finalObject = definedArgs.reduce(
+    (acc, arg) => Object.assign(acc, arg), {});
+
+  const headers = definedArgs.map(init => init.headers).filter(e => !!e);
+  const finalHeaders = mergeHeaders(...headers);
+
+
+  return {
+    ...finalObject,
+    headers: finalHeaders,
+  };
+};
+
+// Merges a list of headers like arguments into a single Headers object.
+const mergeHeaders = (...args) => {
+  return args.reduce((acc, headers) => {
+    for (const [key, value] of Object.entries(headers)) {
+      acc.append(key, value);
+    }
+
+    return acc;
+  }, new Headers());
+};

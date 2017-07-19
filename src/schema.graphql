@@ -81,17 +81,19 @@ input ShareInput {
 
 type Mutation {
 	# Registers your credentials with the server and creates a new session if
-	# the provided credentials are valid.  credentials will be held on the
-	# server until all the user's sessions are revoked. The token in the
-	# response allows you to make authenticated requests with this API until the
-	# session is revoked.
+	# the provided credentials are valid. Credentials will be held on the server
+	# until all the user's sessions are revoked. The token in the response
+	# allows you to make authenticated requests with this API until the session
+	# is revoked.
 	authenticate(email: String!, password: String!): Authed!
 
-	# Revokes a session. If the credentials are incorrect, an error is returned.
+	# TODO: Design a proper authentication flow.
+	# Revokes a session. If the credentials are incorrect or the sesion doesn't
+	# exist, an error is thrown.
 	revokeSession(email: String!, password: String!, session: ID!): Boolean!
 
 	# Revokes all sessions held by the user. If the credentials are incorrect,
-	# an error is returned.
+	# an error is thrown.
 	revokeAll(email: String!, password: String!): Boolean!
 
 	# Creates a new phoenix token for direct communication with the orignal

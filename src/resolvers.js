@@ -1,5 +1,5 @@
 import { getters } from './utils';
-import { auth } from './mutations';
+import { auth, newFolder, deleteFolder, deleteDoc } from './mutations';
 
 export const resolvers = {
   Query: {
@@ -23,7 +23,18 @@ export const resolvers = {
     authenticate: (obj, args, context) =>
       auth(args['email'], args['password'], context),
 
-    // TODO: implement the rest of the mutations
+    newFolder: (obj, args, context) =>
+      newFolder(args['libraryId'], args['path'], context),
+
+    // TODO: Session Management Stuff
+    // TODO: shareFolder
+    // TODO: shareDocument
+
+    deleteFolder: (obj, args, context) =>
+      deleteFolder(args['id'], context),
+
+    deleteDocument: (obj, args, context) =>
+      deleteDoc(args['id'], context),
   },
 
   Authed: getters({
