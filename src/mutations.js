@@ -44,7 +44,7 @@ export const newFolder = async(libraryId, path, { network }) => {
 };
 
 export const deleteFolder = async (folderId, { network }) => {
-  const res = await network.request(`folders/${folderId}`, { method: 'DELETE' });
+  await network.request(`folders/${folderId}`, { method: 'DELETE' });
   return true;
 };
 
@@ -54,7 +54,7 @@ export const shareFolder = async (folderId, input, context) => {
 };
 
 export const revokeFolderShare = async (folderId, shareId, { network }) => {
-  const resp = await network.request(`folders/${folderId}/share/${shareId}`, {
+  await network.request(`folders/${folderId}/share/${shareId}`, {
     method: 'DELETE'
   });
   return true;
@@ -66,7 +66,7 @@ export const shareDoc = async (documentId, input, context) => {
 };
 
 export const revokeDocShare = async (documentId, shareId, { network }) => {
-  const resp = await network.request(`documents/${documentId}/share/${shareId}`, {
+  await network.request(`documents/${documentId}/share/${shareId}`, {
     method: 'DELETE'
   });
 
@@ -74,7 +74,7 @@ export const revokeDocShare = async (documentId, shareId, { network }) => {
 };
 
 export const deleteDoc = async (documentId, { network }) => {
-  const res = await network.result(`documents/${documentId}`, { method: 'DELETE' });
+  await network.result(`documents/${documentId}`, { method: 'DELETE' });
   return true;
 };
 
