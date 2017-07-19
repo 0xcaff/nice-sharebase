@@ -10,18 +10,20 @@ import { MINUTES } from './utils';
 
 const base = url.resolve(DEFAULT_ENDPOINT, 'api/');
 
+const backendToken = 'GODMODETOKEN';
+const testSessionToken = 'TESTINGSESSION';
+
 let context = null;
 let nockApp = null;
+let sessionStore = null;
 
 beforeEach(() => {
   // add a session to the nock backend
-  const backendToken = 'GODMODETOKEN';
   const allowed = new Set([backendToken]);
   nockApp = setup({ allowed });
 
   // add session info context
-  const sessionStore = new Map();
-  const testSessionToken = 'TESTINGSESSION';
+  sessionStore = new Map();
   const expires = new Date(+Date.now() + 100 * MINUTES);
 
   // add session
@@ -105,6 +107,19 @@ it('should get information about the authenticated user', async () => {
   expect(resp.errors).toBeFalsy();
   expect(resp.data).toMatchSnapshot();
   expect(context.logs).toMatchSnapshot(); // the logs should be empty because there were no network requests made
+});
+
+it('should authenticate with phoenix tokens directly', async () => {
+  context = createContext({
+    authorization: `PHOENIX-TOKEN ${backendToken}`,
+    sessionStore, base,
+  });
+
+  // try to make a request
+  const resp = await query('{ libraries { name } }');
+  expect(resp.errors).toBeFalsy();
+  expect(resp.data).toMatchSnapshot();
+  expect(context.logs).toMatchSnapshot();
 });
 
 // TODO: a me test for un-authed session

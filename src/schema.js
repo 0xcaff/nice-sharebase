@@ -37,7 +37,7 @@ export const createContext = ({
   // API to fulfill the query / mutation.
   const logs = [];
 
-  const network = initNetwork({ base, transform, logs, session });
+  const network = initNetwork({ base, transform, logs, session, token });
   const loaders = create({ network });
 
   return { loaders, network, session, token, logs };
@@ -50,13 +50,17 @@ function tryGetSession(store, header) {
     return {};
   }
 
-  // TODO: support direct pheonix-token authentication schema also
   const [ prefix, creds ] = header.split(' ');
-  if (prefix !== 'BOX-TOKEN') {
+  if (prefix === 'BOX-TOKEN') {
+    // try to look up session information
+    const session = store.get(creds);
+
+    return { session, token: creds };
+  } else if (prefix === 'PHOENIX-TOKEN') {
+
+    return { session: null, token: creds };
+  } else {
+
     return {};
   }
-
-  // try to look up session information
-  const session = store.get(creds);
-  return { session, token: creds };
 }

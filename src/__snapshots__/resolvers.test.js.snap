@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should authenticate with phoenix tokens directly 1`] = `
+Object {
+  "libraries": Array [
+    Object {
+      "name": "My Library",
+    },
+    Object {
+      "name": "Iron Man Suit",
+    },
+  ],
+}
+`;
+
+exports[`should authenticate with phoenix tokens directly 2`] = `
+Array [
+  "http://mock.com/api/libraries",
+]
+`;
+
 exports[`should fail explicitly when a single library resources doesn't exist while fetching many 1`] = `
 Array [
   [GraphQLError: The library with id 420 can't be found.],

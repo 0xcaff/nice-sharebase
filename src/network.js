@@ -4,11 +4,11 @@ import 'isomorphic-fetch';
 import { throwOnFail } from './errors';
 import { base64Encode, MINUTES, required, token } from './utils';
 
-export const initNetwork = ({ base, transform, logs, session }) => {
+export const initNetwork = ({ base, transform, logs, session, token }) => {
   const network = {};
   network.req = req({ network, base, transform, logs });
   network.renew = renew({ network, session });
-  network.request = request({ network, session });
+  network.request = request({ network, session, token });
   return network;
 };
 
@@ -60,27 +60,38 @@ const renew = ({ network, session }) =>
 
 const request = (context) =>
   async (path) => {
-    const { session, network: { renew, req } } = context;
-    const { me = required('me', 'req') } = session;
+    const { session, token, network: { renew, req } } = context;
+    const { me = required('me', 'request') } = session;
 
-    // handle renewals
-    const timeToExpire = me.expires - Date.now();
-    if (!me.renewalPromise && timeToExpire < 5 * MINUTES) {
-      // renew the credentials
-      const { email, password } = me;
+    var backendToken = null;
+    if (me === null) {
+      // a token for communicating directly with the ShareBase API was provided.
+      backendToken = token;
+    } else {
+      // a delegate token was supplied
 
-      me.renewalPromise = renew(email, password);
+      // handle renewals
+      const timeToExpire = me.expires - Date.now();
+      if (!me.renewalPromise && timeToExpire < 5 * MINUTES) {
+        // renew the credentials
+        const { email, password } = me;
+
+        me.renewalPromise = renew(email, password);
+      }
+
+      if (me.renewalPromise) {
+        // if the renewal fails, the following line will throw and any request
+        // which triggered a renewal will fail
+        await me.renewalPromise;
+        me.renewalPromise = null;
+      }
+
+      backendToken = me.authed['Token'];
     }
 
-    if (me.renewalPromise) {
-      // if the renewal fails, the following line will throw and any request
-      // which triggered a renewal will fail
-      await me.renewalPromise;
-      me.renewalPromise = null;
-    }
-
-    // we have an active session, use it
-    const token = me.authed['Token'];
-    const headers = new Headers({ 'Authorization': `PHOENIX-TOKEN ${token}` });
+    // we have an active session with the official ShareBase, use it
+    const headers = new Headers({
+      'Authorization': `PHOENIX-TOKEN ${backendToken}`
+    });
     return await req(path, headers);
   };
