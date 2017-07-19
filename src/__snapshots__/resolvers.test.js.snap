@@ -45,6 +45,14 @@ Array [
 ]
 `;
 
+exports[`should fail when accessing secured resources without authentication 1`] = `
+Array [
+  [GraphQLError: me is a required parameter to request],
+]
+`;
+
+exports[`should fail when accessing secured resources without authentication 2`] = `Array []`;
+
 exports[`should get all library names 1`] = `
 Object {
   "libraries": Array [

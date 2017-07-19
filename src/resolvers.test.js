@@ -122,4 +122,13 @@ it('should authenticate with phoenix tokens directly', async () => {
   expect(context.logs).toMatchSnapshot();
 });
 
-// TODO: a me test for un-authed session
+it('should fail when accessing secured resources without authentication', async () => {
+  context = createContext({
+    sessionStore, base,
+  });
+
+  const resp = await query('{ libraries { name } }');
+  expect(resp.errors).toMatchSnapshot();
+  expect(resp.data).toBeFalsy();
+  expect(context.logs).toMatchSnapshot();
+});
