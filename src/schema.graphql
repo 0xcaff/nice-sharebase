@@ -18,7 +18,6 @@ type Folder {
 # you will need to talk to the orignial ShareBase server. Checkout description
 # of the Query type fore more.
 
-# TODO: Potentially allow for the upload of small files.
 type Document {
 	id: ID!
 	name: String!
@@ -34,7 +33,8 @@ type Document {
 # Authorization is handled by passing a token to the HTTP Authorization header
 # of a request. You can get a token by calling the authenticate mutation. If you
 # want to use the original ShareBase API for authentication, you can pass tokens
-# using the PHOENIX-TOKEN scheme to this header also.
+# using the PHOENIX-TOKEN scheme to this header also. All endpoints except the
+# authenticate mutation require authentication.
 type Query {
 	me: Authed!
 	libraries: [Library]!
@@ -44,8 +44,12 @@ type Query {
 }
 
 type Authed {
-	# As long as you specify this string in your requests' Authorization header,
-	# you will be able to access protected resources on the server.
+	# The access token. Specify this string in the token property to
+	# createContext prefixed with BOX-TOKEN like so:
+	#
+	#   BOX-TOKEN THIS-IS-MY-TOKEN
+	#
+	# and you will be able to access protected resources on the server.
 	token: ID!
 
 	# The name of the currently signed in user.
@@ -53,6 +57,15 @@ type Authed {
 
 	# The id of the currently signed in user.
 	id: ID!
+}
+
+type PNXToken {
+	# The phoenix token used to authenticate directly to the offical ShareBase
+	# servers.
+	token: ID!
+
+	# The epoch time at which this token will no longer be valid.
+	expires: Int!
 }
 
 type Share {
@@ -63,20 +76,22 @@ type Share {
 	url: String!
 }
 
+# Setting passed when sharing folders and documents. If expiresOn and singleUse
+# are unset, the share will never expire. If more than one is set, an exception
+# is thrown.
 input ShareInput {
-	# TODO: The format of the date isn't specified.
-	# TODO: Single use?
-
-	# Some kind of date in the future when this share will expire.
-	expiresOn: String
+	# The epoch time at which this share will expire.
+	expiresOn: Int!
+	singleUse: Boolean
 
 	# A password which will be required when acessing the share. This password
-	# MUST adhere to the sharebase password policy.
+	# MUST adhere to the sharebase instance's password policy. If this isn't
+	# provided, a password will not be set.
 	password: String
 
-	allowView: Boolean
-	allowDownload: Boolean
-	allowEdit: Boolean
+	allowView: Boolean!
+	allowDownload: Boolean!
+	allowEdit: Boolean!
 }
 
 type Mutation {
@@ -87,27 +102,24 @@ type Mutation {
 	# is revoked.
 	authenticate(email: String!, password: String!): Authed!
 
-	# TODO: Design a proper authentication flow.
-	# Revokes a session. If the credentials are incorrect or the sesion doesn't
-	# exist, an error is thrown.
-	revokeSession(email: String!, password: String!, session: ID!): Boolean!
-
-	# Revokes all sessions held by the user. If the credentials are incorrect,
-	# an error is thrown.
-	revokeAll(email: String!, password: String!): Boolean!
+	# Revokes the access token being used to make this request. If the session
+	# doesn't exist, an error is thrown.
+	revokeSession: Boolean!
 
 	# Creates a new phoenix token for direct communication with the orignal
 	# ShareBase API. Be careful with this token because it cannot be revoked. It
 	# expires in 10 hours.
-	phoenixToken: ID!
+	phoenixToken: PNXToken!
 
 	# Creates a new folder in the library at the specified path. Required parent
 	# folders are created if they don't exist. The path delimiters aren't
 	# specified. Try whatever you want.
 	newFolder(libraryId: ID!, path: String!): Folder!
-	shareFolder(id: ID!, input: ShareInput!): Share!
 	deleteFolder(id: ID!): Boolean!
+	shareFolder(id: ID!, input: ShareInput!): Share!
+	revokeFolderShare(folderId: ID!, shareId: ID!): Boolean!
 
 	shareDocument(id: ID!, input: ShareInput!): Share!
+	revokeDocumentShare(documentId: ID!, shareId: ID!): Boolean!
 	deleteDocument(id: ID!): Boolean!
 }

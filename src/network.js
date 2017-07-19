@@ -7,6 +7,8 @@ import { base64Encode, MINUTES, required, token } from './utils';
 export const initNetwork = ({ base, transform, logs, session, token }) => {
   const network = {};
   network.req = req({ network, base, transform, logs });
+  network.getPnxToken = getPnxToken({ network });
+
   network.renew = renew({ network, session });
   network.request = request({ network, session, token });
   return network;
@@ -24,19 +26,28 @@ const req = ({ base, transform, logs }) =>
     return body;
   };
 
-// Renews or creates the session using the information provided. It updates
-// context.session, context.sessionStore and returns the response received from
-// the server along with the token to use to access the just renewed session.
-const renew = ({ network, session }) =>
+// Makes a request to the official sharebase to create a new session and returns
+// the response without updating the context session.
+const getPnxToken = ({ network }) =>
   async (
     email = required('email', 'renew'),
     password = required('password', 'renew')
   ) => {
-    const { store } = session;
-
     const inner = base64Encode(`${email}:${password}`);
     const headers = { 'Authorization': `Basic ${inner}` };
     const authed = await network.req('authenticate', { headers });
+
+    return authed;
+  };
+
+// Renews or creates the session using the information provided. It updates
+// context.session, context.sessionStore and returns the response received from
+// the server along with the token to use to access the just renewed session.
+const renew = ({ network, session }) =>
+  async (email, password) => {
+    const { store } = session;
+
+    const authed = await network.getPnxToken(email, password);
 
     // update session
     if (!session.me) {
@@ -60,8 +71,8 @@ const renew = ({ network, session }) =>
 
 const request = (context) =>
   async (path, init) => {
-    const { session, token, network: { renew, req } } = context;
-    const { me = required('me', 'request') } = session;
+    const { session, network: { renew, req } } = context;
+    const { me = required('me', 'request'), token } = session;
 
     var backendToken = null;
     if (me === null) {

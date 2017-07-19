@@ -1,5 +1,6 @@
 import { getters } from './utils';
-import { auth, newFolder, deleteFolder, deleteDoc } from './mutations';
+import { auth, revoke, pnxToken, newFolder, deleteFolder,
+  deleteDoc } from './mutations';
 
 export const resolvers = {
   Query: {
@@ -23,6 +24,12 @@ export const resolvers = {
     authenticate: (obj, args, context) =>
       auth(args['email'], args['password'], context),
 
+    revokeSession: (obj, args, context) =>
+      revoke(context),
+
+    pheonixToken: (obj, args, context) =>
+      pnxToken(context),
+
     newFolder: (obj, args, context) =>
       newFolder(args['libraryId'], args['path'], context),
 
@@ -36,6 +43,11 @@ export const resolvers = {
     deleteDocument: (obj, args, context) =>
       deleteDoc(args['id'], context),
   },
+
+  PNXToken: getters({
+    token: "Token",
+    expires: (obj) => +new Date.parse(obj['ExpirationDate']),
+  }),
 
   Authed: getters({
     token: 'delegate',

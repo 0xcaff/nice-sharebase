@@ -47,6 +47,37 @@ Array [
 ]
 `;
 
+exports[`should get pnx tokens without updating context 1`] = `
+Object {
+  "ExpirationDate": "2017-07-14T02:50:00.000Z",
+  "Token": "Session3",
+  "UserId": 1,
+  "UserName": "sam.babic@onbase.com",
+}
+`;
+
+exports[`should get pnx tokens without updating context 2`] = `
+Object {
+  "me": Object {
+    "email": "sam.babic@onbase.com",
+    "password": "password",
+  },
+  "store": Map {
+    "NICE-SHAREBASE-ACCESS-TOKEN" => Object {
+      "email": "sam.babic@onbase.com",
+      "password": "password",
+    },
+  },
+  "token": "NICE-SHAREBASE-ACCESS-TOKEN",
+}
+`;
+
+exports[`should get pnx tokens without updating context 3`] = `
+Array [
+  "http://mock.com/api/authenticate",
+]
+`;
+
 exports[`should make requests using a phoenix token 1`] = `
 Array [
   Object {
@@ -74,6 +105,7 @@ exports[`should make requests using a phoenix token 2`] = `
 Object {
   "me": null,
   "store": Map {},
+  "token": "PHNX-BACKEND-TOKEN",
 }
 `;
 

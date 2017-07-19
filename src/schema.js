@@ -6,6 +6,8 @@ import { nop, required } from './utils';
 import { initNetwork } from './network';
 import rawSchema from './schema.graphql';
 
+// TODO: make the schema work on the client side
+
 export const schema = makeExecutableSchema({typeDefs: [rawSchema], resolvers});
 
 // A to create the context for the nice-sharebase schema. The context holds the
@@ -31,16 +33,16 @@ export const createContext = ({
   authorization,
 }) => {
   const { session: me, token } = tryGetSession(sessionStore, authorization);
-  const session = { me, store: sessionStore };
+  const session = { me, store: sessionStore, token };
 
   // Information about the requests which were made to the official ShareBase
   // API to fulfill the query / mutation.
   const logs = [];
 
-  const network = initNetwork({ base, transform, logs, session, token });
+  const network = initNetwork({ base, transform, logs, session });
   const loaders = create({ network });
 
-  return { loaders, network, session, token, logs };
+  return { loaders, network, session, logs };
 };
 
 // Tries to get a session from the given information. If there isn't enough
