@@ -29,7 +29,7 @@ export const resolvers = {
     revokeSession: (obj, args, context) =>
       revoke(context),
 
-    pheonixToken: (obj, args, context) =>
+    phoenixToken: (obj, args, context) =>
       pnxToken(context),
 
     newFolder: (obj, args, context) =>
