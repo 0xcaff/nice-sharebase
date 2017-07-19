@@ -65,6 +65,9 @@
         "error",
         "unix"
       ],
+      "no-warning-comments": [
+        "warn"
+      ],
       "no-console": "warn"
     }
   },
