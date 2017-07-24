@@ -1,31 +1,41 @@
 {
   "name": "nice-sharebase",
   "version": "1.0.0",
-  "description": "A nice GraphQL wrapper around the ShareBase public API.",
-  "author": "Martin Charles",
+  "description": "A GraphQL wrapper around the ShareBase public API.",
+  "homepage": "https://0xcaff.github.io/nice-sharebase",
+  "bugs": "https://github.com/0xcaff/nice-sharebase/issues",
+  "author": "Martin Charles <martincharles07@gmail.com>",
   "license": "AGPL-3.0",
-  "main": "index.js",
+  "main": "lib/schema.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xcaff/nice-sharebase.git"
+  },
+  "files": [
+    "lib"
+  ],
   "dependencies": {
     "babel-plugin-inline-import": "^2.0.5",
     "babel-preset-latest": "^6.24.1",
-    "babel-register": "^6.24.1",
+    "babel-runtime": "^6.23.0",
     "graphql": "^0.10.3",
     "graphql-tools": "^1.1.0",
-    "isomorphic-fetch": "^2.2.1",
-    "regenerator-runtime": "^0.10.5"
+    "isomorphic-fetch": "^2.2.1"
   },
   "scripts": {
     "test": "jest",
-    "test-dev": "jest --watch",
+    "prepack": "npm run compile",
     "mock-server": "babel-node mock/server.js",
     "demo": "babel-node mock/gql-server.js",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js",
+    "compile": "babel --out-dir lib src"
   },
   "babel": {
     "presets": [
       "latest"
     ],
     "plugins": [
+      "transform-runtime",
       "babel-plugin-inline-import",
       "transform-object-rest-spread"
     ]
@@ -78,6 +88,7 @@
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "eslint": "^4.2.0",
     "eslint-plugin-jest": "^20.0.3",
     "express": "^4.15.3",

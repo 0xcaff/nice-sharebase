@@ -23,8 +23,9 @@ export const createContext = ({
   transform = nop,
 
   // A place to keep newly created sessions and retrive informatino about
-  // existing sessions. This can be any map like object (set, get, has, clear,
-  // delete, values). This should be persisted between requests.
+  // existing sessions. This is used by the client to the original ShareBase API
+  // to maintain active sessions. This can be any map like object (set, get,
+  // has, clear, delete, values). This should be persisted between requests.
   sessionStore = required('sessionStore', 'createContext()'),
 
   // A token to use to authenticate against the endpoint. This can be a

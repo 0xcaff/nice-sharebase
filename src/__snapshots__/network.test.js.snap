@@ -24,20 +24,23 @@ Object {
     "expires": 1500000600000,
     "password": "password",
   },
-  "store": Map {
-    "Session2" => Object {
-      "authed": Object {
-        "ExpirationDate": "2017-07-14T02:50:00.000Z",
-        "Token": "Session1",
-        "UserId": 0,
-        "UserName": "sam.babic@onbase.com",
-        "delegate": "Session2",
+  "store": Array [
+    Array [
+      "Session2",
+      Object {
+        "authed": Object {
+          "ExpirationDate": "2017-07-14T02:50:00.000Z",
+          "Token": "Session1",
+          "UserId": 0,
+          "UserName": "sam.babic@onbase.com",
+          "delegate": "Session2",
+        },
+        "email": "sam.babic@onbase.com",
+        "expires": 1500000600000,
+        "password": "password",
       },
-      "email": "sam.babic@onbase.com",
-      "expires": 1500000600000,
-      "password": "password",
-    },
-  },
+    ],
+  ],
 }
 `;
 
@@ -62,12 +65,15 @@ Object {
     "email": "sam.babic@onbase.com",
     "password": "password",
   },
-  "store": Map {
-    "NICE-SHAREBASE-ACCESS-TOKEN" => Object {
-      "email": "sam.babic@onbase.com",
-      "password": "password",
-    },
-  },
+  "store": Array [
+    Array [
+      "NICE-SHAREBASE-ACCESS-TOKEN",
+      Object {
+        "email": "sam.babic@onbase.com",
+        "password": "password",
+      },
+    ],
+  ],
   "token": "NICE-SHAREBASE-ACCESS-TOKEN",
 }
 `;
@@ -104,7 +110,7 @@ Array [
 exports[`should make requests using a phoenix token 2`] = `
 Object {
   "me": null,
-  "store": Map {},
+  "store": Array [],
   "token": "PHNX-BACKEND-TOKEN",
 }
 `;

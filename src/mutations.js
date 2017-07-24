@@ -1,8 +1,6 @@
 import { jsonify } from './network';
 
-// We assume that queries and mutations don't happen in the same request to
-// avoid purging the caches. express-graphql doesn't allow queries and mutations
-// in the same request, but other libraries might.
+// TODO: implement cache purging for these mutations
 
 export const auth = async (email, password, { network }) => {
   const res = await network.renew(email, password);
