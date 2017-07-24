@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.App > .toolbar {
+  background-color: rgb(245, 245, 245);
+  border-bottom: 1px solid rgb(229, 229, 229);
+  padding: 7px 14px 6px;
+
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.toolbar > input {
+  margin: 0 1em;
+  width: 100%;
+}

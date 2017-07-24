@@ -2,8 +2,17 @@ language: node_js
 node_js:
   - node
 
-cache: yarn
+cache:
+  yarn: true
+  directories:
+    - packages/playground/node_modules
 
 script:
   - yarn lint
   - yarn test -- --coverage
+
+after_script:
+  - yarn run prepack
+  - cd packages/playground/
+  - npm install
+  - npm run deploy
