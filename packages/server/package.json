@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node start.js"
+  },
+  "dependencies": {
+    "apollo-server-express": "^1.0.4",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "graphql": "^0.10.5",
+    "nice-sharebase": "file:../../"
+  }
+}

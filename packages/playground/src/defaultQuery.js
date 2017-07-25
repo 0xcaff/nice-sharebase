@@ -13,6 +13,7 @@ export default `
 # connectivity. The server-side approach is recommended for production.
 
 # TODO: Directions on how to setup server side stuff.
+# TODO: When is the cache purged?
 
 # First, before you make any requests, you will need to obtain a session.
 # nice-sharebase provides an abstraction layer over the official ShareBase API to
@@ -63,4 +64,6 @@ query ComplexQuery {
     }
   }
 }
+
+# To see the requests in a waterfall view, open DevTools.
 `;

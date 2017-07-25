@@ -6,6 +6,7 @@ cache:
   directories:
     - ./node_modules/
     - packages/playground/node_modules
+    - packages/server/node_modules
 
 script:
   - npm run lint
@@ -14,9 +15,10 @@ script:
 after_script:
   - npm run prepack
 
-  # Remove the graphql installed for development
-  - rm -rf node_modules/graphql
+  # Remove the packages installed for development
+  - npm prune --production
 
   - cd packages/playground/
   - npm install
+  - npm ls
   - npm run deploy
