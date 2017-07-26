@@ -21,6 +21,8 @@ type Folder {
 type Document {
 	id: ID!
 	name: String!
+
+	# The epoch time at which this document was last modified.
 	modified: String!
 }
 

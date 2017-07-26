@@ -6,8 +6,6 @@ import { nop, required } from './utils';
 import { initNetwork } from './network';
 import rawSchema from './schema.graphql';
 
-// TODO: make the schema work on the client side
-
 export const schema = makeExecutableSchema({typeDefs: [rawSchema], resolvers});
 
 // A to create the context for the nice-sharebase schema. The context holds the

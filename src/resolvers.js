@@ -98,6 +98,6 @@ export const resolvers = {
   Document: getters({
     id: 'DocumentId',
     name: 'DocumentName',
-    modified: 'DateModified',
+    modified: (obj) => +new Date(obj['DateModified']),
   }),
 };

@@ -10,15 +10,15 @@ export default `
 # the official ShaseBase API. nice-sharebase can also be run on a server to
 # handle the batching and caching server-side sending only the required
 # information to clients. This is especially useful for devices with transient
-# connectivity. The server-side approach is recommended for production.
-
-# TODO: Directions on how to setup server side stuff.
-# TODO: When is the cache purged?
-
-# First, before you make any requests, you will need to obtain a session.
-# nice-sharebase provides an abstraction layer over the official ShareBase API to
-# maintain non-expiring delegate tokens. You can also use PHOENIX-TOKENs with
-# this API. Here's how to get a delegate token, also known as a BOX-TOKEN:
+# connectivity. The server-side approach is recommended for production. Here's
+# an example on how to setup nice-sharebase to run on a server:
+# https://github.com/0xcaff/nice-sharebase/tree/master/examples/server
+#
+# Let's see what this thing can do! First, before you make any requests, you
+# will need to obtain a session. nice-sharebase provides an abstraction layer
+# over the official ShareBase API to maintain non-expiring delegate tokens. You
+# can also use PHOENIX-TOKENs with this API. Here's how to get a delegate token,
+# also known as a BOX-TOKEN:
 
 mutation GetDelegateToken {
   authenticate(email: "Sam.Babic@onbase.com", password: "password") {
