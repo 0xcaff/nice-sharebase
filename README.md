@@ -1,5 +1,19 @@
-nice-sharebase [![Build Status][build-status-image]][build-status]
+nice-sharebase
 ==============
+
+<p>
+  <a href='https://travis-ci.org/0xcaff/nice-sharebase'>
+    <img src='https://travis-ci.org/0xcaff/nice-sharebase.svg?branch=master' />
+  </a>
+
+  <a href='https://www.npmjs.com/package/nice-sharebase'>
+    <img src='https://img.shields.io/npm/v/nice-sharebase.svg' />
+  </a>
+
+  <a href='https://0xcaff.github.io/nice-sharebase'>
+    <b>Playground</b>
+  </a>
+</p>
 
 [ShareBase][sharebase] is a cloud document storage solution targeted towards
 enterprise. This is a GraphQL wrapper around the [official ShareBase
@@ -98,8 +112,7 @@ your own projects.
 
 [playground]: https://0xcaff.github.io/nice-sharebase
 [examples]: examples/
-[build-status-image]: https://travis-ci.org/0xcaff/nice-sharebase.svg?branch=master
-[build-status]: https://travis-ci.org/0xcaff/nice-sharebase
 [official-docs]: https://developers.sharebase.com/
 [sharebase]: https://sharebase.onbase.com/
 [schema]: src/schema.graphql
+
