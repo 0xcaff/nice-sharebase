@@ -1,6 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlExpress } = require('apollo-server-express');
+const gql = require('express-graphql');
 const { schema, createContext } = require('nice-sharebase');
 
 const app = express();
@@ -8,7 +7,7 @@ const app = express();
 const baseUrl = 'https://app.sharebase.com/sharebaseapi/api/';
 const sessionStore = new Map();
 
-app.use('/graphql', bodyParser.json(), graphqlExpress(req => ({
+app.use('/graphql', gql(req => ({
   schema,
   context: createContext({
     base: baseUrl,
