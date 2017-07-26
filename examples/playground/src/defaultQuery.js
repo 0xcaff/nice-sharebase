@@ -51,6 +51,8 @@ mutation GetDelegateToken {
 # Here's an example query:
 query ComplexQuery {
   libraries {
+    name
+
     folders {
       folders {
         name
