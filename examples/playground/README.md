@@ -7,5 +7,13 @@ the official ShareBase API directly from your browser.
 
 This project was bootstrapped with [Create React App][cra].
 
+Running
+-------
+
+To run, first run:
+
+    npm install
+    npm run start
+
 [cra]: https://github.com/facebookincubator/create-react-app
 [live]: https://0xcaff.github.io/nice-sharebase

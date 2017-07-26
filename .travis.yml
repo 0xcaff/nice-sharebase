@@ -5,20 +5,25 @@ node_js:
 cache:
   directories:
     - ./node_modules/
-    - packages/playground/node_modules
-    - packages/server/node_modules
 
 script:
   - npm run lint
   - npm test -- --coverage
 
-after_script:
   - npm run prepack
 
-  # Remove the packages installed for development
-  - npm prune --production
+  # Get it into a state where only production dependencies are installed.
+  - rm -rf node_modules/
+  - npm install --only=production
 
-  - cd packages/playground/
+after_script:
+  - cd examples/playground/
   - npm install
+
+  # Copy package to be consistent.
+  - rm node_modules/nice-sharebase
+  - mkdir node_modules/nice-sharebase
+  - cp -r ../../{lib,node_modules,package.json} node_modules/nice-sharebase
+
   - npm ls
   - npm run deploy

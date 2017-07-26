@@ -9,6 +9,6 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "graphql": "^0.10.5",
-    "nice-sharebase": "file:../../"
+    "nice-sharebase": "file:../.."
   }
 }
